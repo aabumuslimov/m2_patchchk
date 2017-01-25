@@ -22,14 +22,14 @@ class Patch_Converter
         return str_replace('-', '', ucwords($string, '-'));
     }
 
-    protected function camelCaseStringCallbackModule($value)
+    protected function camelCaseStringCallbackModule($matches)
     {
-        return $this->gitPath[self::MODULE] . $this->convertDashedStringToCamelCase($value[1]);
+        return $this->gitPath[self::MODULE] . $this->convertDashedStringToCamelCase($matches[1]);
     }
 
-    protected function camelCaseStringCallbackLibrary($value)
+    protected function camelCaseStringCallbackLibrary($matches)
     {
-        return $this->gitPath[self::LIBRARY] . $this->convertDashedStringToCamelCase($value[1]);
+        return $this->gitPath[self::LIBRARY] . $this->convertDashedStringToCamelCase($matches[1]);
     }
 
     public function convertFromComposerToGitFormat($content)
@@ -40,6 +40,11 @@ class Patch_Converter
         }
 
         return $content;
+    }
+
+    public function removePathPrefixFromGitFormat($content)
+    {
+        return preg_replace('~(a/|b/)(' . join('|', $this->gitPath) . ')~', '$2', $content);
     }
 
     public function extractPatchFromSh($content)
@@ -56,6 +61,8 @@ class Patch_Converter
             $content = $this->extractPatchFromSh($content);
         }
 
-        return $this->convertFromComposerToGitFormat($content);
+        $content = $this->convertFromComposerToGitFormat($content);
+
+        return $this->removePathPrefixFromGitFormat($content);
     }
 }
