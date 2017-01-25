@@ -35,7 +35,7 @@ class Patch_Converter
     public function convertFromComposerToGitFormat($content)
     {
         foreach ($this->composerPath as $type => $path) {
-            $content = preg_replace_callback('~' . addcslashes($path, '/') . '([-\w]+)~',
+            $content = preg_replace_callback('~(?:a/|b/)' . addcslashes($path, '/') . '([-\w]+)~',
                 array($this, 'camelCaseStringCallback' . $type), $content);
         }
 
