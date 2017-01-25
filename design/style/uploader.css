@@ -1,0 +1,46 @@
+/* Style for uploader element */
+
+#uploader_main {
+    width: 100%;
+    height: 130px;
+    margin: 32px;
+}
+
+#upload {
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 40px;
+    padding: 10px;
+    border: 2px dashed #ddd;
+}
+
+#uploaded {
+    width: 620px;
+    height: 102px;
+    top: 0;
+    left: 210px;
+    padding: 10px;
+    margin-left: 16px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+.files {
+    background-color: #EEE;
+    width: 500px;
+    height: 30px;
+    float: left;
+    margin: 0 5px 5px 0;
+    padding: 2px;
+    font-size: 10px;
+}
+.progress {
+    width: 0%;
+    background-color: #03C;
+    height: 4px; margin-top: 5px;
+}
+
+#uploader_new input[type="file"] {
+    width: 350px;
+}

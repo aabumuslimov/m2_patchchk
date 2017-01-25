@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="design/js/jquery/jquery-1.5.1.min.js"></script>
+    <script type="text/javascript" src="design/js/jquery/plugins/mfupload.js"></script>
+    <script type="text/javascript" src="design/js/uploader.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="design/style/style.css" media="all" />
+    <link type="text/css" rel="stylesheet" href="design/style/uploader.css" media="all" />
+
+    <title>Patch check</title>
+</head>
+<body>
+<!--<button onclick="$('#uploader').hide(); $('#uploader_new').show();  $(this).hide();">Do you want to check few patches?</button>-->
+<br />
+    <div id="main_content_div">
+        <div id="uploader">
+            <div id="upload"></div>
+            <div id="uploaded"></div>
+        </div>
+<!--        <div id="uploader_new" style="display: none">-->
+<!--            <form action="index.php?action=upload" enctype="multipart/form-data" method="post">-->
+<!--                <strong>Keep in mind, that these patches will be uploaded in following order</strong>-->
+<!--                <ul>-->
+<!--                    <li><input type="file" name="mf_file_uploader[]" /><button class="minus" type="button">-</button><button class="plus" type="button">+</button></li>-->
+<!--                </ul>-->
+<!--                <input type="submit" value="Upload" />-->
+<!--                <input type="hidden" name="folder" value="/tmp/_patchchk_uploads/" />-->
+<!--                <input type="hidden" name="file_element" value="mf_file_uploader" />-->
+<!--                <input type="hidden" name="no_ajax" value="1" />-->
+<!--            </form>-->
+<!--        </div>-->
+        <div id="results_div" <?php if (isset($result)): ?>style="display:block;"<?php endif; ?>>
+            <table id="result_table_ee" class="result_table">
+                <thead>
+                    <td colspan="2">EE results</td>
+                </thead>
+                <tbody><?php
+                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['ee'])):
+                        echo $patchChecker->drawResults($result['checkResults']['ee']);
+                    endif;
+                ?></tbody>
+            </table>
+<!--            <table id="result_table_ce" class="result_table">-->
+<!--                <thead>-->
+<!--                    <td colspan="2">CE results</td>-->
+<!--                </thead>-->
+<!--                <tbody>--><?php
+//                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['ce'])):
+//                        echo $patchChecker->drawResults($result['checkResults']['ce']);
+//                    endif;
+//                ?><!--</tbody>-->
+<!--            </table>-->
+<!--            <table id="result_table_pe" class="result_table">-->
+<!--                <thead>-->
+<!--                    <td colspan="2">PE results</td>-->
+<!--                </thead>-->
+<!--                <tbody>--><?php
+//                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['pe'])):
+//                        echo $patchChecker->drawResults($result['checkResults']['pe']);
+//                    endif;
+//                ?><!--</tbody>-->
+<!--            </table>-->
+        </div>
+
+        <div id="message_div">
+            <?php echo $messageList ?>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,7 @@
+[ee]
+2.1.0 = "/www/magento2/ee/2.1.0"
+2.1.3 = "/www/magento2/ee/2.1.3"
+
+[ce]
+2.1.0 = "/www/magento2/ce/2.1.0"
+2.1.1 = "/www/magento2/ce/2.1.1"
