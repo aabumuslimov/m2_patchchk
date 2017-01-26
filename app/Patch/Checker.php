@@ -2,8 +2,8 @@
 
 class Patch_Checker
 {
-    protected $_eeDeploymentList = array();
-    protected $_ceDeploymentList = array();
+    protected $_eeDeploymentList = [];
+    protected $_ceDeploymentList = [];
 
 
     public function __construct()
@@ -58,7 +58,7 @@ class Patch_Checker
 //        }
 //
 //        $returnStatus = 0;
-//        $output = array();
+//        $output = [];
 //
 //        exec('patch -p0 < ' . UPLOAD_PATH . $patchName['name'], $output, $returnStatus);
 //        exec('rm -Rf *');
@@ -68,35 +68,35 @@ class Patch_Checker
 
     public function checkPatchForAllReleases($patchName, $withoutDryRun = false)
     {
-        $result = array();
+        $result = [];
 
 //        if (!$withoutDryRun) {
             foreach ($this->_eeDeploymentList as $release => $path) {
-                $result['ee'][] = array(
+                $result['ee'][] = [
                     'release_name' => $release,
                     'check_result' => $this->checkPatchForRelease($patchName, $path)
-                );
+                ];
             }
             foreach ($this->_ceDeploymentList as $release => $path) {
-                $result['ce'][] = array(
+                $result['ce'][] = [
                     'release_name' => $release,
                     'check_result' => $this->checkPatchForRelease($patchName, $path)
-                );
+                ];
             }
 //        } else {
 //            $workDirectory = $this->_initWorkDirectory();
 //            chdir($workDirectory);
 //            foreach ($this->_eeDeploymentList as $release => $path) {
-//                $result['ee'][] = array(
+//                $result['ee'][] = [
 //                    'release_name' => $release,
-//                    'check_result' => $this->checkMergedPathForRelease($patchName, array($release => $path))
-//                );
+//                    'check_result' => $this->checkMergedPathForRelease($patchName, [$release => $path])
+//                ];
 //            }
 //            foreach ($this->_ceDeploymentList as $release => $path) {
-//                $result['ce'][] = array(
+//                $result['ce'][] = [
 //                    'release_name' => $release,
-//                    'check_result' => $this->checkMergedPathForRelease($patchName, array($release => $path)),
-//                );
+//                    'check_result' => $this->checkMergedPathForRelease($patchName, [$release => $path]),
+//                ];
 //            }
 //
 //            exec('rm -Rf ' . $workDirectory);
@@ -121,10 +121,10 @@ class Patch_Checker
 //
 //        exec('grep "diff --git" ' . UPLOAD_PATH . $temporaryPatchName . ' | awk \'{print $3}\'', $files);
 //
-//        return array(
+//        return [
 //            'name' => $temporaryPatchName,
 //            'files' => $files
-//        );
+//        ];
 //    }
 
 //    protected function _initWorkDirectory()

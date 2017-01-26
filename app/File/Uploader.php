@@ -6,6 +6,8 @@ class File_Uploader
 
     protected $_uploadPath = './';
 
+    protected $_uploadedFiles = [];
+
 
     protected function _getHashedFileName($fileName)
     {
@@ -15,16 +17,16 @@ class File_Uploader
 
     protected function _prepareResponse($fileName, $path, $size, $error = '')
     {
-        return array(
+        return [
             'error'     => $error,
             'filename'  => $fileName,
             'path'      => $path,
             'size'      => sprintf('%.2fKb', array_sum($size) / 1024),
             'dt'        => date('Y-m-d H:i:s')
-        );
+        ];
     }
 
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if ($params) {
             if (isset($params['max_file_size']) && $params['max_file_size'] > 0) {
@@ -52,10 +54,10 @@ class File_Uploader
     public function upload()
     {
         $fileElementName = $_POST['file_element'];
-        $error           = array();
+        $error           = [];
         $fileNames       = $_FILES[$fileElementName]['name'];
-        $newFileName     = array();
-        $size            = array();
+        $newFileName     = [];
+        $size            = [];
 
         foreach ($fileNames as $fileId => $name) {
             if (!empty($_FILES[$fileElementName]['error'][$fileId])) {
@@ -114,9 +116,21 @@ class File_Uploader
             }
         }
 
-        return array(
+        $this->_uploadedFiles = $newFileName;
+
+        return [
             'result'        => $this->_prepareResponse($fileNames, $_POST['folder'], $size, $error),
             'new_file_name' => $newFileName
-        );
+        ];
+    }
+
+    public function __destruct()
+    {
+        foreach ($this->_uploadedFiles as $fileName) {
+            $uploadedFilePath = BP . UPLOAD_PATH . $fileName;
+            if (file_exists($uploadedFilePath)) {
+                @unlink($uploadedFilePath);
+            }
+        }
     }
 }

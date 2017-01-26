@@ -11,63 +11,38 @@ require_once('app/Patch/Checker.php');
 require_once('app/Patch/Converter.php');
 
 $action = (isset($_GET['action'])) ? $_GET['action'] : false;
-$messageList = array();
+$messageList = [];
 
 try {
     if ($action == 'upload' && !empty($_POST)) {
-        $fileUploader = new File_Uploader(array('upload_path' => BP . UPLOAD_PATH));
+        $fileUploader = new File_Uploader(['upload_path' => BP . UPLOAD_PATH]);
         $result = $fileUploader->upload();
 
-        try {
-            $patchChecker = new Patch_Checker();
+        $patchChecker = new Patch_Checker();
+        //        if (count($result['new_file_name']) == 1) {
+        $checkResults = $patchChecker->checkPatchForAllReleases($result['new_file_name'][0]);
+        //        } else {
+        //            $mergedPatch = $patchChecker->mergePatchesToOne($result['new_file_name'], $result['result']['filename']);
+        //            $checkResults = $patchChecker->checkPatchForAllReleases($mergedPatch, true);
+        //            @unlink(UPLOAD_PATH . $mergedPatch['name']);
+        //        }
+        $result = $result['result'];
+        $result['checkResults'] = $checkResults;
 
-            //        if (count($result['new_file_name']) == 1) {
-            $checkResults = $patchChecker->checkPatchForAllReleases($result['new_file_name'][0]);
-            //        } else {
-            //            $mergedPatch = $patchChecker->mergePatchesToOne($result['new_file_name'], $result['result']['filename']);
-            //            $checkResults = $patchChecker->checkPatchForAllReleases($mergedPatch, true);
-            //            @unlink(UPLOAD_PATH . $mergedPatch['name']);
-            //        }
-
-            if (isset($result['result'])) {
-                $collectStats = true;
-                $statsPath = BP . STATS_PATH;
-                if (!file_exists($statsPath)) {
-                    $collectStats = mkdir($statsPath, 0777, true);
-                }
-
-                foreach ($result['result']['filename'] as $fileId => $filename) {
-                    $uploadedFilePath = BP . UPLOAD_PATH . $result['new_file_name'][$fileId];
-                    if (file_exists($uploadedFilePath)) {
-                        @unlink($uploadedFilePath);
-                    }
-
-                    if ($collectStats) {
-                        // checked patches statistic collection
-                        $data = date('Y-m-d H:i:s') . ': ' . $filename . "\n";
-                        file_put_contents($statsPath . 'stats.log', $data, FILE_APPEND);
-                    }
+        // checked patches statistic collection
+        if (isset($result['filename'])) {
+            $statsPath = BP . STATS_PATH;
+            if (file_exists($statsPath) || mkdir($statsPath, 0777, true)) {
+                foreach ($result['filename'] as $fileId => $filename) {
+                    $data = date('Y-m-d H:i:s') . ': ' . $filename . "\n";
+                    file_put_contents($statsPath . 'stats.log', $data, FILE_APPEND);
                 }
             }
+        }
 
-            $result = $result['result'];
-            $result['checkResults'] = $checkResults;
-
-            if (!NO_AJAX) {
-                echo json_encode($result);
-                die;
-            }
-        } catch (Exception $e) {
-            if (isset($result['result'])) {
-                foreach ($result['result']['filename'] as $fileId => $filename) {
-                    $uploadedFilePath = BP . UPLOAD_PATH . $result['new_file_name'][$fileId];
-                    if (file_exists($uploadedFilePath)) {
-                        @unlink($uploadedFilePath);
-                    }
-                }
-            }
-
-            throw $e;
+        if (!NO_AJAX) {
+            echo json_encode($result);
+            die;
         }
     }
 } catch (Exception $e) {
