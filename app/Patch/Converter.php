@@ -35,16 +35,16 @@ class Patch_Converter
     public function convertFromComposerToGitFormat($content)
     {
         foreach ($this->composerPath as $type => $path) {
-            $content = preg_replace_callback('~(?:a/|b/)?' . $path . '([-\w]+)~',
+            $content = preg_replace_callback('~' . $path . '([-\w]+)~',
                 [$this, 'camelCaseStringCallback' . $type], $content);
         }
 
         return $content;
     }
 
-    public function removePathPrefixFromGitFormat($content)
+    public function removePathPrefix($content)
     {
-        return preg_replace('~(a/|b/)(' . join('|', $this->gitPath) . ')~', '$2', $content);
+        return preg_replace('~(\s+)(a/|b/)([^\s]+)~', '$1$3', $content);
     }
 
     public function extractPatchFromSh($content)
@@ -59,6 +59,6 @@ class Patch_Converter
         }
         $content = $this->convertFromComposerToGitFormat($content);
 
-        return $this->removePathPrefixFromGitFormat($content);
+        return $this->removePathPrefix($content);
     }
 }
