@@ -2,18 +2,24 @@
 
 class Patch_Converter
 {
-    const MODULE = 'Module';
-    const LIBRARY = 'Library';
+    const MODULE            = 'Module';
+    const LIBRARY           = 'Library';
+    const ADMINHTML_DESIGN  = 'AdminhtmlDesign';
+    const FRONTEND_DESIGN   = 'FrontendDesign';
 
 
     protected $gitPath = [
-        self::MODULE    => 'app/code/Magento/',
-        self::LIBRARY   => 'lib/internal/Magento/'
+        self::MODULE            => 'app/code/Magento/',
+        self::LIBRARY           => 'lib/internal/Magento/',
+        self::ADMINHTML_DESIGN  => 'app/design/adminhtml/Magento/',
+        self::FRONTEND_DESIGN   => 'app/design/frontend/Magento/'
     ];
 
     protected $composerPath = [
-        self::MODULE    => 'vendor/magento/module-',
-        self::LIBRARY   => 'vendor/magento/'
+        self::MODULE            => 'vendor/magento/module-',
+        self::LIBRARY           => 'vendor/magento/',
+        self::ADMINHTML_DESIGN  => 'vendor/magento/theme-adminhtml-',
+        self::FRONTEND_DESIGN   => 'vendor/magento/theme-frontend-'
     ];
 
 
@@ -30,6 +36,16 @@ class Patch_Converter
     protected function camelCaseStringCallbackLibrary($matches)
     {
         return $this->gitPath[self::LIBRARY] . $this->convertDashedStringToCamelCase($matches[1]);
+    }
+
+    protected function camelCaseStringCallbackAdminhtmlDesign($matches)
+    {
+        return $this->gitPath[self::ADMINHTML_DESIGN] . $this->convertDashedStringToCamelCase($matches[1]);
+    }
+
+    protected function camelCaseStringCallbackFrontendDesign($matches)
+    {
+        return $this->gitPath[self::FRONTEND_DESIGN] . $this->convertDashedStringToCamelCase($matches[1]);
     }
 
     public function convertFromComposerToGitFormat($content)
