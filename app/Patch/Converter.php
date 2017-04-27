@@ -35,12 +35,12 @@ class Patch_Converter
 
     protected function camelCaseStringCallbackAdminhtmlDesign($matches)
     {
-        return $this->gitPath[self::ADMINHTML_DESIGN] . $this->convertDashedStringToCamelCase($matches[1]);
+        return $this->gitPath[self::ADMINHTML_DESIGN] . $matches[1];
     }
 
     protected function camelCaseStringCallbackFrontendDesign($matches)
     {
-        return $this->gitPath[self::FRONTEND_DESIGN] . $this->convertDashedStringToCamelCase($matches[1]);
+        return $this->gitPath[self::FRONTEND_DESIGN] . $matches[1];
     }
 
     protected function camelCaseStringCallbackLibrary($matches)
