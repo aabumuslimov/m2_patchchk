@@ -19,20 +19,14 @@ try {
         $result = $fileUploader->upload();
 
         $patchChecker = new Patch_Checker();
-        //        if (count($result['new_file_name']) == 1) {
         $checkResults = $patchChecker->checkPatchForAllReleases($result['new_file_name'][0]);
-        //        } else {
-        //            $mergedPatch = $patchChecker->mergePatchesToOne($result['new_file_name'], $result['result']['filename']);
-        //            $checkResults = $patchChecker->checkPatchForAllReleases($mergedPatch, true);
-        //            @unlink(UPLOAD_PATH . $mergedPatch['name']);
-        //        }
         $result = $result['result'];
-        $result['checkResults'] = $checkResults;
+        $result['check_results'] = $checkResults;
 
         // checked patches statistic collection
         if (isset($result['filename'])) {
             $statsPath = BP . STATS_PATH;
-            if (file_exists($statsPath) || mkdir($statsPath, 0777, true)) {
+            if (file_exists($statsPath) || mkdir($statsPath, 2777, true)) {
                 foreach ($result['filename'] as $fileId => $filename) {
                     $data = date('Y-m-d H:i:s') . ': ' . $filename . "\n";
                     file_put_contents($statsPath . 'stats.log', $data, FILE_APPEND);
@@ -40,10 +34,8 @@ try {
             }
         }
 
-        if (!NO_AJAX) {
-            echo json_encode($result);
-            die;
-        }
+        echo json_encode($result);
+        die;
     }
 } catch (Exception $e) {
     $messageList[] .= '<span class="error_span">' . $e->getMessage() . '</span>';

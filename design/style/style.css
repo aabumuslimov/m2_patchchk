@@ -24,6 +24,10 @@ div#results_div {
     display: none;
 }
 
+table.result_table td {
+    font-family: Verdana;
+}
+
 table.result_table thead td {
     font-weight: bold;
     background-color: #BBB;

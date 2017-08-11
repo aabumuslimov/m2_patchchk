@@ -14,56 +14,38 @@
     <title>Patch check</title>
 </head>
 <body>
-<!--<button onclick="$('#uploader').hide(); $('#uploader_new').show();  $(this).hide();">Do you want to check few patches?</button>-->
 <br />
     <div id="main_content_div">
         <div id="uploader">
             <div id="upload"></div>
             <div id="uploaded"></div>
         </div>
-<!--        <div id="uploader_new" style="display: none">-->
-<!--            <form action="index.php?action=upload" enctype="multipart/form-data" method="post">-->
-<!--                <strong>Keep in mind, that these patches will be uploaded in following order</strong>-->
-<!--                <ul>-->
-<!--                    <li><input type="file" name="mf_file_uploader[]" /><button class="minus" type="button">-</button><button class="plus" type="button">+</button></li>-->
-<!--                </ul>-->
-<!--                <input type="submit" value="Upload" />-->
-<!--                <input type="hidden" name="folder" value="/tmp/_patchchk_uploads/" />-->
-<!--                <input type="hidden" name="file_element" value="mf_file_uploader" />-->
-<!--                <input type="hidden" name="no_ajax" value="1" />-->
-<!--            </form>-->
-<!--        </div>-->
-        <div id="results_div" <?php if (isset($result)): ?>style="display:block;"<?php endif; ?>>
-            <table id="result_table_ee" class="result_table">
-                <thead>
-                    <td colspan="2">EE results</td>
-                </thead>
-                <tbody><?php
-                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['ee'])):
-                        echo $patchChecker->drawResults($result['checkResults']['ee']);
-                    endif;
-                ?></tbody>
-            </table>
-<!--            <table id="result_table_ce" class="result_table">-->
-<!--                <thead>-->
-<!--                    <td colspan="2">CE results</td>-->
-<!--                </thead>-->
-<!--                <tbody>--><?php
-//                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['ce'])):
-//                        echo $patchChecker->drawResults($result['checkResults']['ce']);
-//                    endif;
-//                ?><!--</tbody>-->
-<!--            </table>-->
-<!--            <table id="result_table_pe" class="result_table">-->
-<!--                <thead>-->
-<!--                    <td colspan="2">PE results</td>-->
-<!--                </thead>-->
-<!--                <tbody>--><?php
-//                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['pe'])):
-//                        echo $patchChecker->drawResults($result['checkResults']['pe']);
-//                    endif;
-//                ?><!--</tbody>-->
-<!--            </table>-->
+        <div id="results_div" <?php if (isset($result['check_results'])): ?>style="display:block;"<?php endif; ?>>
+            <?php foreach($result['check_results'] as $name => $group): ?>
+                <table class="result_table">
+                    <thead>
+                        <td colspan="2"><?php echo $name ?></td>
+                    </thead>
+                    <tbody>
+                        <?php foreach($group as $release): ?>
+                            <tr>
+                                <?php if ($release['check_result'] === 'n/a'): ?>
+                                    <td colspan="2">
+                                        <?php echo ($release['release_name'] === 'n/a') ? '&nbsp;' : $release['release_name'] ?>
+                                    </td>
+                                <?php else: ?>
+                                    <td>
+                                        <?php echo $release['release_name'] ?>
+                                    </td>
+                                    <td class="<?php echo ($release['check_result']) ? 'td_ok' : 'td_fail' ?>">
+                                        <?php echo ($release['check_result']) ? 'Ok' : 'No' ?>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endforeach; ?>
         </div>
 
         <div id="message_div">
