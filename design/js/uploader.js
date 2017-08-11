@@ -5,7 +5,7 @@ $().ready(function() {
     var errors = "";
 
     $('#upload').mfupload({
-        type        : 'patch,sh',
+        type        : 'patch,diff,sh',
         maxsize     : 15,
         post_upload : 'index.php?action=upload',
         folder      : '/tmp/_patchchk_uploads/',
