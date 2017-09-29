@@ -27,7 +27,21 @@ class Patch_Checker
         return !$returnStatus;
     }
 
-    public function checkPatchForAllReleases($patchName)
+    public function checkPatchForGitRelease($patchName, $releasePath)
+    {
+        if ($releasePath == '' || !is_dir($releasePath)) {
+            return 'n/a';
+        }
+
+        chdir($releasePath);
+        exec('git apply --check ' . BP . UPLOAD_PATH . $patchName, $output, $GitStatus);
+
+        $returnGitStatus = ($GitStatus == 0) ? true : false;
+
+        return $returnGitStatus;
+    }
+
+    public function checkPatchForAllReleases($patchName, $patchNameGit)
     {
         $result = [];
 
@@ -42,7 +56,8 @@ class Patch_Checker
 
                 $result[$groupName][] = [
                     'release_name' => $release,
-                    'check_result' => $this->checkPatchForRelease($patchName, $path)
+                    'check_result' => $this->checkPatchForRelease($patchName, $path),
+                    'check_git_result' => $this->checkPatchForGitRelease($patchNameGit, $path)
                 ];
             }
         }

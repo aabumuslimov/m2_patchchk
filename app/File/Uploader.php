@@ -95,6 +95,7 @@ class File_Uploader
                 $size[$fileId] = @filesize($_FILES[$fileElementName]['tmp_name'][$fileId]);
 
                 $newFileName[$fileId] = $this->_getHashedFileName($name) . '.patch';
+                $newGitFileName[$fileId] = $this->_getHashedFileName($name) . '.git.patch';
                 if (move_uploaded_file(
                     $_FILES[$fileElementName]['tmp_name'][$fileId],
                     $this->_uploadPath . $newFileName[$fileId]
@@ -103,9 +104,11 @@ class File_Uploader
 
                     $converter = new Patch_Converter();
                     $stripSh = (pathinfo($fileNames[$fileId], PATHINFO_EXTENSION) == 'sh');
-                    $content = $converter->preparePatch($content, $stripSh);
+                    $contentPatch = $converter->preparePatch($content, $stripSh);
+                    $contentGit = $converter->prepareGitPatch($content, $stripSh);
                     if ($content) {
-                        file_put_contents($this->_uploadPath . $newFileName[$fileId], $content);
+                        file_put_contents($this->_uploadPath . $newFileName[$fileId], $contentPatch);
+                        file_put_contents($this->_uploadPath . $newGitFileName[$fileId], $contentGit);
                     } else {
                         @unlink($this->_uploadPath . $newFileName[$fileId]);
                         $error[$fileId][] = 'Sh script has incorrect format.';
@@ -117,16 +120,24 @@ class File_Uploader
         }
 
         $this->_uploadedFiles = $newFileName;
+        $this->_uploadedGitFiles = $newGitFileName;
 
         return [
             'result'        => $this->_prepareResponse($fileNames, $_POST['folder'], $size, $error),
-            'new_file_name' => $newFileName
+            'new_file_name' => $newFileName,
+            'new_git_file_name' => $newGitFileName,
         ];
     }
 
     public function __destruct()
     {
         foreach ($this->_uploadedFiles as $fileName) {
+            $uploadedFilePath = BP . UPLOAD_PATH . $fileName;
+            if (file_exists($uploadedFilePath)) {
+                @unlink($uploadedFilePath);
+            }
+        }
+        foreach ($this->_uploadedGitFiles as $fileName) {
             $uploadedFilePath = BP . UPLOAD_PATH . $fileName;
             if (file_exists($uploadedFilePath)) {
                 @unlink($uploadedFilePath);

@@ -45,6 +45,9 @@ table.result_table {
 td.td_fail {
     background-color: #FFBCBC;
 }
+td.td_git_fail {
+    background-color: #FFFF00;
+}
 td.td_ok {
     background-color: #C9F3C5;
 }
