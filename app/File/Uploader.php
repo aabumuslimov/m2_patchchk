@@ -119,8 +119,8 @@ class File_Uploader
             }
         }
 
-        $this->_uploadedFiles = $newFileName;
-        $this->_uploadedGitFiles = $newGitFileName;
+        $this->_uploadedFiles[] = $newFileName;
+        $this->_uploadedFiles[] = $newGitFileName;
 
         return [
             'result'        => $this->_prepareResponse($fileNames, $_POST['folder'], $size, $error),
@@ -132,13 +132,7 @@ class File_Uploader
     public function __destruct()
     {
         foreach ($this->_uploadedFiles as $fileName) {
-            $uploadedFilePath = BP . UPLOAD_PATH . $fileName;
-            if (file_exists($uploadedFilePath)) {
-                @unlink($uploadedFilePath);
-            }
-        }
-        foreach ($this->_uploadedGitFiles as $fileName) {
-            $uploadedFilePath = BP . UPLOAD_PATH . $fileName;
+            $uploadedFilePath = BP . UPLOAD_PATH . $fileName[0];
             if (file_exists($uploadedFilePath)) {
                 @unlink($uploadedFilePath);
             }
