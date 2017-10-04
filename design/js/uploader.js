@@ -34,7 +34,7 @@ $().ready(function() {
 
                 var output = '<table class="result_table">'
                     + '<thead>'
-                        + '<td colspan="2">' + groupName + '</td>'
+                        + '<td colspan="3">' + groupName + ' patch/git</td>'
                     + '</thead>';
 
                 for (var release in groupResults) {
@@ -47,13 +47,18 @@ $().ready(function() {
                         } else {
                             var columnContent = release.release_name
                         }
-                        output += ' colspan="2">' + columnContent;
+                        output += ' colspan="3">' + columnContent;
                     } else {
                         output += '>' + release.release_name + '</td>';
                         if (release.check_result == true) {
                             output += '<td class="td_ok">Ok';
                         } else {
                             output += '<td class="td_fail">No';
+                        }
+                        if (release.check_git_result == true) {
+                            output += '<td class="td_ok">Ok';
+                        } else {
+                            output += '<td class="td_git_fail">No';
                         }
                     }
                     output += '</td></tr>';

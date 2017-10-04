@@ -77,4 +77,14 @@ class Patch_Converter
 
         return $this->removePathPrefix($content);
     }
+
+    public function prepareGitPatch($content, $stripSh = false)
+    {
+        if ($stripSh) {
+            $content = $this->extractPatchFromSh($content);
+        }
+        $content = $this->convertFromComposerToGitFormat($content);
+
+        return $content;
+    }
 }

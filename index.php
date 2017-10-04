@@ -19,7 +19,7 @@ try {
         $result = $fileUploader->upload();
 
         $patchChecker = new Patch_Checker();
-        $checkResults = $patchChecker->checkPatchForAllReleases($result['new_file_name'][0]);
+        $checkResults = $patchChecker->checkPatchForAllReleases($result['new_file_name'][0], $result['new_git_file_name'][0]);
         $result = $result['result'];
         $result['check_results'] = $checkResults;
 

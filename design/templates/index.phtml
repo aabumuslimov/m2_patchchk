@@ -30,7 +30,7 @@
                         <?php foreach($group as $release): ?>
                             <tr>
                                 <?php if ($release['check_result'] === 'n/a'): ?>
-                                    <td colspan="2">
+                                    <td colspan="3">
                                         <?php echo ($release['release_name'] === 'n/a') ? '&nbsp;' : $release['release_name'] ?>
                                     </td>
                                 <?php else: ?>
@@ -39,6 +39,10 @@
                                     </td>
                                     <td class="<?php echo ($release['check_result']) ? 'td_ok' : 'td_fail' ?>">
                                         <?php echo ($release['check_result']) ? 'Ok' : 'No' ?>
+                                    </td>
+                                    <td class="<?php echo ($release['check_git_result']) ? 'td_git_ok' : 'td_git_fail' ?>">
+                                        <?php echo ('a') ?>
+                                        <?php echo ($release['check_git_result']) ? 'Ok' : 'No' ?>
                                     </td>
                                 <?php endif; ?>
                             </tr>
