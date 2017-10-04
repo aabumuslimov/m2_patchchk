@@ -49,15 +49,17 @@ class Patch_Checker
             foreach ($groupInstanceList as $release => $path) {
                 if (is_int($path)) {
                     for ($i = 0; $i < $path; $i++) {
-                        $result[$groupName][] = ['release_name' => 'n/a', 'check_result' => 'n/a'];
+                        $result[$groupName][] = ['instance_name' => 'n/a', 'check_method' => 'n/a'];
                     }
                     continue;
                 }
 
                 $result[$groupName][] = [
-                    'release_name' => $release,
-                    'check_result' => $this->checkPatchForRelease($patchName, $path),
-                    'check_git_result' => $this->checkPatchForGitRelease($patchNameGit, $path)
+                    'instance_name' => $release,
+                    'check_method' => [
+                        'patch' => $this->checkPatchForRelease($patchName, $path),
+                        'git' => $this->checkPatchForGitRelease($patchNameGit, $path)
+                    ]
                 ];
             }
         }

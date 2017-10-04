@@ -28,9 +28,13 @@ table.result_table td {
     font-family: Verdana;
 }
 
-table.result_table thead td {
+table.result_table thead tr.header td {
     font-weight: bold;
     background-color: #BBB;
+}
+table.result_table thead tr.subheader td {
+    font-size: 10px;
+    background-color: #F9F9F9;
 }
 table.result_table, table.result_table td {
     border: 1px solid #333;
@@ -39,14 +43,14 @@ table.result_table, table.result_table td {
 table.result_table {
     display: block;
     float: left;
-    margin-right: 20px;
+    margin-right: 40px;
     border-collapse: collapse;
 }
 td.td_fail {
     background-color: #FFBCBC;
 }
-td.td_git_fail {
-    background-color: #FFFF00;
+td.td_adaptation_required {
+    background-color: #FFFF99;
 }
 td.td_ok {
     background-color: #C9F3C5;

@@ -34,31 +34,46 @@ $().ready(function() {
 
                 var output = '<table class="result_table">'
                     + '<thead>'
-                        + '<td colspan="3">' + groupName + ' patch/git</td>'
+                        + '<tr class="header">'
+                            + '<td colspan="3">' + groupName + '</td>'
+                        + '</tr>'
+                        + '<tr class="subheader">'
+                            + '<td>Version</td>'
+                            + '<td>EE</td>'
+                            + '<td>Cloud</td>'
+                        + '</tr>'
                     + '</thead>';
 
                 for (var release in groupResults) {
                     var release = groupResults[release];
 
                     output += '<tr><td';
-                    if (release.check_result == 'n/a') {
-                        if (release.release_name == 'n/a') {
+                    if (release.check_method == 'n/a') {
+                        if (release.instance_name == 'n/a') {
                             var columnContent = '&nbsp;';
                         } else {
-                            var columnContent = release.release_name
+                            var columnContent = release.instance_name
                         }
                         output += ' colspan="3">' + columnContent;
                     } else {
-                        output += '>' + release.release_name + '</td>';
-                        if (release.check_result == true) {
-                            output += '<td class="td_ok">Ok';
-                        } else {
-                            output += '<td class="td_fail">No';
+                        var falseResultClass = 'td_fail';
+                        for (var methodResult in release.check_method) {
+                            if (release.check_method[methodResult] == true) {
+                                falseResultClass = 'td_adaptation_required';
+                                break;
+                            }
                         }
-                        if (release.check_git_result == true) {
+
+                        output += '>' + release.instance_name + '</td>';
+                        if (release.check_method['patch'] == true) {
                             output += '<td class="td_ok">Ok';
                         } else {
-                            output += '<td class="td_git_fail">No';
+                            output += '<td class="' + falseResultClass + '">No';
+                        }
+                        if (release.check_method['git'] == true) {
+                            output += '<td class="td_ok">Ok';
+                        } else {
+                            output += '<td class="' + falseResultClass + '">No';
                         }
                     }
                     output += '</td></tr>';
