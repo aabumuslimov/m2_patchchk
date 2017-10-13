@@ -1,3 +1,4 @@
 /.idea
 /app/config/instance_list.ini
 /var/*
+/vendor/*
