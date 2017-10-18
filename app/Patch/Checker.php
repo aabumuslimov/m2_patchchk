@@ -15,30 +15,16 @@ class Patch_Checker
         $this->instanceList = parse_ini_file($instanceListFilePath, true, INI_SCANNER_TYPED);
     }
 
-    public function checkPatchForRelease($patchName, $releasePath)
+    public function checkPatchForRelease($command, $releasePath)
     {
         if ($releasePath == '' || !is_dir($releasePath)) {
             return 'n/a';
         }
 
         chdir($releasePath);
-        exec('patch --dry-run -p0 < ' . BP . UPLOAD_PATH . $patchName, $output, $returnStatus);
+        exec($command, $output, $returnStatus);
 
         return !$returnStatus;
-    }
-
-    public function checkPatchForGitRelease($patchName, $releasePath)
-    {
-        if ($releasePath == '' || !is_dir($releasePath)) {
-            return 'n/a';
-        }
-
-        chdir($releasePath);
-        exec('git apply --check ' . BP . UPLOAD_PATH . $patchName, $output, $GitStatus);
-
-        $returnGitStatus = ($GitStatus == 0) ? true : false;
-
-        return $returnGitStatus;
     }
 
     public function checkPatchForAllReleases($patchName, $patchNameGit)
@@ -57,8 +43,8 @@ class Patch_Checker
                 $result[$groupName][] = [
                     'instance_name' => $release,
                     'check_method' => [
-                        'patch' => $this->checkPatchForRelease($patchName, $path),
-                        'git' => $this->checkPatchForGitRelease($patchNameGit, $path)
+                        'patch' => $this->checkPatchForRelease('patch --dry-run -p0 < ' . BP . UPLOAD_PATH . $patchName, $path),
+                        'git'   => $this->checkPatchForRelease('git apply --check ' . BP . UPLOAD_PATH . $patchNameGit, $path)
                     ]
                 ];
             }
