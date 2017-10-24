@@ -1,5 +1,4 @@
 /.idea
-/app/bin/convert-for-composer.php
 /app/config/instance_list.ini
 design/js/jquery/jquery.min.js
 /var/*

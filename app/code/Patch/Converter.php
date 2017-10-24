@@ -2,7 +2,7 @@
 
 class Patch_Converter
 {
-    private $converterToolPath = 'app/bin/convert-for-composer.php';
+    private $converterToolPath = 'app/bin/patch-converter.php';
 
 
     public function convert($sourcePath, $options, $destPath = null)

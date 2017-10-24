@@ -43,6 +43,6 @@
     ],
 
     "copyJqueryMin": "cp -f vendor/components/jquery/jquery.min.js design/js/jquery",
-    "copyPatchConverter": "cp -f vendor/isitnikov/m2-convert-patch-for-composer-install/convert-for-composer.php app/bin"
+    "copyPatchConverter": "cp -f vendor/isitnikov/m2-convert-patch-for-composer-install/convert-for-composer.php app/bin/patch-converter.php"
   }
 }
