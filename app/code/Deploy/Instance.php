@@ -34,9 +34,10 @@ class Deploy_Instance
         if ($this->instanceType === null) {
             $this->instanceType = self::INSTANCE_TYPE_INVALID;
             if ($this->instancePath != '' && is_dir($this->instancePath)) {
-                $this->instanceType = is_dir($this->instancePath . DS . 'app' . DS . 'code' . DS . 'Magento')
-                    ? self::INSTANCE_TYPE_GIT
-                    : self::INSTANCE_TYPE_COMPOSER;
+                $indicator = 'vendor' . DS . 'magento' . DS . 'magento2-base';
+                $this->instanceType = is_dir($this->instancePath . DS . $indicator)
+                    ? self::INSTANCE_TYPE_COMPOSER
+                    : self::INSTANCE_TYPE_GIT;
             }
         }
 
