@@ -1,14 +1,10 @@
 <?php
 
-/**
- * Support M2 patch checker tool v.0.4.0
- */
+require_once 'app/bootstrap.php';
 
-require_once('app/bootstrap.php');
-
-require_once('app/File/Uploader.php');
-require_once('app/Patch/Checker.php');
-require_once('app/Patch/Converter.php');
+require_once 'app/code/File/Filesystem.php';
+require_once 'app/code/File/Uploader.php';
+require_once 'app/code/Patch/Checker.php';
 
 $action = (isset($_GET['action'])) ? $_GET['action'] : false;
 $messageList = [];
@@ -18,8 +14,8 @@ try {
         $fileUploader = new File_Uploader(['upload_path' => BP . UPLOAD_PATH]);
         $result = $fileUploader->upload();
 
-        $patchChecker = new Patch_Checker();
-        $checkResults = $patchChecker->checkPatchForAllReleases($result['new_file_name'][0], $result['new_git_file_name'][0]);
+        $patchChecker = new Patch_Checker(BP . UPLOAD_PATH . $result['new_file_name'][0]);
+        $checkResults = $patchChecker->checkPatchForAllReleases();
         $result = $result['result'];
         $result['check_results'] = $checkResults;
 

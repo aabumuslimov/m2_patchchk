@@ -6,13 +6,10 @@ class File_Uploader
 
     protected $_uploadPath = './';
 
-    protected $_uploadedFiles = [];
 
-
-    protected function _getHashedFileName($fileName)
+    private function getHashedFileName($fileName)
     {
-        $tmpName = md5($fileName . mt_rand());
-        return $tmpName;
+        return md5($fileName . mt_rand());
     }
 
     protected function _prepareResponse($fileName, $path, $size, $error = '')
@@ -45,7 +42,7 @@ class File_Uploader
     public function checkUploadDirectoryExists()
     {
         if (!file_exists($this->_uploadPath)) {
-            mkdir($this->_uploadPath, 0777, true);
+            mkdir($this->_uploadPath, 2777, true);
         }
 
         return $this;
@@ -94,48 +91,21 @@ class File_Uploader
             } else {
                 $size[$fileId] = @filesize($_FILES[$fileElementName]['tmp_name'][$fileId]);
 
-                $newFileName[$fileId] = $this->_getHashedFileName($name) . '.patch';
-                $newGitFileName[$fileId] = $this->_getHashedFileName($name) . '.git.patch';
-                if (move_uploaded_file(
-                    $_FILES[$fileElementName]['tmp_name'][$fileId],
-                    $this->_uploadPath . $newFileName[$fileId]
-                )) {
-                    $content = file_get_contents($this->_uploadPath . $newFileName[$fileId]);
-
+                $newFileName[$fileId] = $this->getHashedFileName($name) . '.patch';
+                $patchPath = $this->_uploadPath . $newFileName[$fileId];
+                if (move_uploaded_file($_FILES[$fileElementName]['tmp_name'][$fileId], $patchPath)) {
+                    require_once 'app/code/Patch/Converter.php';
                     $converter = new Patch_Converter();
-                    $stripSh = (pathinfo($fileNames[$fileId], PATHINFO_EXTENSION) == 'sh');
-                    $contentPatch = $converter->preparePatch($content, $stripSh);
-                    $contentGit = $converter->prepareGitPatch($content, $stripSh);
-                    if ($content) {
-                        file_put_contents($this->_uploadPath . $newFileName[$fileId], $contentPatch);
-                        file_put_contents($this->_uploadPath . $newGitFileName[$fileId], $contentGit);
-                    } else {
-                        @unlink($this->_uploadPath . $newFileName[$fileId]);
-                        $error[$fileId][] = 'Sh script has incorrect format.';
-                    }
+                    $converter->preparePatch($patchPath);
                 } else {
                     $error[$fileId][] = 'Unable to move uploaded file from tmp folder.';
                 }
             }
         }
 
-        $this->_uploadedFiles[] = $newFileName;
-        $this->_uploadedFiles[] = $newGitFileName;
-
         return [
             'result'        => $this->_prepareResponse($fileNames, $_POST['folder'], $size, $error),
-            'new_file_name' => $newFileName,
-            'new_git_file_name' => $newGitFileName,
+            'new_file_name' => $newFileName
         ];
-    }
-
-    public function __destruct()
-    {
-        foreach ($this->_uploadedFiles as $fileName) {
-            $uploadedFilePath = BP . UPLOAD_PATH . $fileName[0];
-            if (file_exists($uploadedFilePath)) {
-                @unlink($uploadedFilePath);
-            }
-        }
     }
 }

@@ -13,18 +13,36 @@
     }
   ],
 
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "isitnikov/m2-convert-patch-for-composer-install",
+        "version": "1.1.0",
+        "dist": {
+          "url": "https://raw.githubusercontent.com/isitnikov/m2-convert-patch-for-composer-install/master/convert-for-composer.php",
+          "type": "file"
+        }
+      }
+    }
+  ],
+
   "require": {
-    "components/jquery": "3.2"
+    "components/jquery": "3.2",
+    "isitnikov/m2-convert-patch-for-composer-install": "1.1.0"
   },
 
   "scripts": {
     "post-install-cmd": [
-      "@copyJqueryMin"
+      "@copyJqueryMin",
+      "@copyPatchConverter"
     ],
     "post-update-cmd": [
-      "@copyJqueryMin"
+      "@copyJqueryMin",
+      "@copyPatchConverter"
     ],
 
-    "copyJqueryMin": "cp -f vendor/components/jquery/jquery.min.js design/js/jquery"
+    "copyJqueryMin": "cp -f vendor/components/jquery/jquery.min.js design/js/jquery",
+    "copyPatchConverter": "cp -f vendor/isitnikov/m2-convert-patch-for-composer-install/convert-for-composer.php app/bin"
   }
 }

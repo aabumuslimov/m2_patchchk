@@ -48,7 +48,7 @@ $().ready(function() {
                     var release = groupResults[release];
 
                     output += '<tr><td';
-                    if (release.check_method == 'n/a') {
+                    if (release.check_strategy == 'n/a') {
                         if (release.instance_name == 'n/a') {
                             var columnContent = '&nbsp;';
                         } else {
@@ -57,20 +57,20 @@ $().ready(function() {
                         output += ' colspan="3">' + columnContent;
                     } else {
                         var falseResultClass = 'td_fail';
-                        for (var methodResult in release.check_method) {
-                            if (release.check_method[methodResult] == true) {
+                        for (var strategyResult in release.check_strategy) {
+                            if (release.check_strategy[strategyResult] == true) {
                                 falseResultClass = 'td_adaptation_required';
                                 break;
                             }
                         }
 
                         output += '>' + release.instance_name + '</td>';
-                        if (release.check_method['patch'] == true) {
+                        if (release.check_strategy['patch'] == true) {
                             output += '<td class="td_ok">Ok';
                         } else {
                             output += '<td class="' + falseResultClass + '">No';
                         }
-                        if (release.check_method['git'] == true) {
+                        if (release.check_strategy['git_apply'] == true) {
                             output += '<td class="td_ok">Ok';
                         } else {
                             output += '<td class="' + falseResultClass + '">No';
