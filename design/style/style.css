@@ -55,6 +55,9 @@ td.td_adaptation_required {
 td.td_ok {
     background-color: #C9F3C5;
 }
+td.td_merged {
+    background-color: #C899D7;
+}
 
 table.result_table tr td {
     padding: 2px 10px;

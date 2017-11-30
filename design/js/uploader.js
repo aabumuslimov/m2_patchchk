@@ -55,22 +55,25 @@ $().ready(function() {
                             var columnContent = release.instance_name
                         }
                         output += ' colspan="3">' + columnContent;
+                    } else if (release.check_strategy == 'merged') {
+                        output += '>' + release.instance_name + '</td>'
+                            + '<td class="td_merged" colspan="2">Merged';
                     } else {
                         var falseResultClass = 'td_fail';
                         for (var strategyResult in release.check_strategy) {
-                            if (release.check_strategy[strategyResult] == true) {
+                            if (release.check_strategy[strategyResult] == 1) {
                                 falseResultClass = 'td_adaptation_required';
                                 break;
                             }
                         }
 
                         output += '>' + release.instance_name + '</td>';
-                        if (release.check_strategy['patch'] == true) {
+                        if (release.check_strategy['patch'] == 1) {
                             output += '<td class="td_ok">Ok';
                         } else {
                             output += '<td class="' + falseResultClass + '">No';
                         }
-                        if (release.check_strategy['git_apply'] == true) {
+                        if (release.check_strategy['git_apply'] == 1) {
                             output += '<td class="td_ok">Ok';
                         } else {
                             output += '<td class="' + falseResultClass + '">No';

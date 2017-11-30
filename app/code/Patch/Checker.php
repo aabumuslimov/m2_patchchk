@@ -6,6 +6,11 @@ require_once 'app/code/Patch/Converter.php';
 
 class Patch_Checker
 {
+    const PATCH_APPLY_RESULT_FAILED     = 0;
+    const PATCH_APPLY_RESULT_SUCCESSFUL = 1;
+    const PATCH_APPLY_RESULT_MERGED     = 2;
+
+
     private $instanceManager;
 
     private $strategyManager;
@@ -68,7 +73,14 @@ class Patch_Checker
                 $patchPath = $this->getPatchForInstanceType($instance->getInstanceType());
                 $checkResult = [];
                 foreach ($this->strategyManager->getStrategyList() as $strategy) {
-                    $checkResult[$strategy->getStrategyName()] = $strategy->check($patchPath, $instance->getInstancePath());
+                    $strategyResult = $strategy->check($patchPath, $instance->getInstancePath());
+
+                    if ($strategyResult == self::PATCH_APPLY_RESULT_MERGED) {
+                        $checkResult = 'merged';
+                        break;
+                    }
+
+                    $checkResult[$strategy->getStrategyName()] = $strategyResult;
                 }
 
                 $result[$groupName][] = [

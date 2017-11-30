@@ -4,8 +4,18 @@ class PatchStrategy extends AbstractStrategy
 {
     protected $strategyName = 'patch';
 
-    protected function getCommand($patchPath, $instancePath)
+    protected function getCommand($patchPath, $instancePath, $revertMode = false)
     {
-        return "patch --dry-run --directory=\"{$instancePath}\" -p0 < {$patchPath}";
+        $options = [
+            '--dry-run' => null,
+            '--directory' => $instancePath,
+            '-p0' => null
+        ];
+
+        if ($revertMode) {
+            $options['-R'] = null;
+        }
+
+        return "patch {$this->renderOptions($options)} < {$patchPath}";
     }
 }
