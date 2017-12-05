@@ -2,4 +2,5 @@
 /app/config/instance_list.ini
 design/js/jquery/jquery.min.js
 /var/*
-/vendor
+/vendor/*
+!/**/.htaccess
