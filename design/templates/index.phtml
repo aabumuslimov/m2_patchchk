@@ -4,12 +4,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <script type="text/javascript" src="design/js/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="design/js/jquery/plugins/mfupload.js"></script>
-    <script type="text/javascript" src="design/js/uploader.js"></script>
+    <script type="text/javascript" src="design/js/jquery/jquery.min.js?<?php echo $design->getStaticHash() ?>"></script>
+    <script type="text/javascript" src="design/js/jquery/plugins/mfupload.js?<?php echo $design->getStaticHash() ?>"></script>
+    <script type="text/javascript" src="design/js/uploader.js?<?php echo $design->getStaticHash() ?>"></script>
+    <script type="text/javascript" src="design/js/script.js?<?php echo $design->getStaticHash() ?>"></script>
 
-    <link type="text/css" rel="stylesheet" href="design/style/style.css" media="all" />
-    <link type="text/css" rel="stylesheet" href="design/style/uploader.css" media="all" />
+    <link type="text/css" rel="stylesheet" href="design/style/style.css?<?php echo $design->getStaticHash() ?>" media="all" />
+    <link type="text/css" rel="stylesheet" href="design/style/uploader.css?<?php echo $design->getStaticHash() ?>" media="all" />
 
     <title>Patch check</title>
 </head>
@@ -24,7 +25,9 @@
             <?php foreach($result['check_results'] as $name => $group): ?>
                 <table class="result_table">
                     <thead>
-                        <td colspan="2"><?php echo $name ?></td>
+                        <tr>
+                            <td colspan="2"><?php echo $name ?></td>
+                        </tr>
                     </thead>
                     <tbody>
                         <?php foreach($group as $release): ?>
@@ -52,8 +55,66 @@
             <?php endforeach; ?>
         </div>
 
-        <div id="message_div">
-            <?php echo $messageList ?>
+        <div id="legend_container_div">
+            <div id="legend_header_div">Legend<span id="legend_fold_icon" class="fold_icon"></span></div>
+            <div id ="legend_body_div">
+                <table class="result_table legend_table">
+                    <thead>
+                        <tr class="subheader">
+                            <td>Status</td>
+                            <td>Description</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td_ok">Ok</td>
+                            <td class="description_td">Patch is applicable.</td>
+                        </tr>
+                        <tr>
+                            <td class="td_adaptation_required">No</td>
+                            <td class="description_td">
+                                Patch failed to apply by specific apply strategy, however it was successfully applied by other automated strategy.
+                                It means it can be easily ported without complete workflow escalation process.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td_merged">Merged</td>
+                            <td class="description_td">Solution is already merged to a release.</td>
+                        </tr>
+                        <tr>
+                            <td class="td_fail">No</td>
+                            <td class="description_td">
+                                Patch failed to apply.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="result_table legend_table">
+                    <thead>
+                        <tr class="subheader">
+                            <td colspan="3">Release</td>
+                            <td>Description</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2.1.0</td>
+                            <td class="td_ok">Ok</td>
+                            <td class="td_adaptation_required">No</td>
+                            <td class="description_td">Validation was made for the specific release and the results are provided.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">2.0.22</td>
+                            <td class="description_td">Release is declared in a config, but the corresponding code base is not found or has wrong permissions.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">&nbsp;</td>
+                            <td class="description_td">Placeholder. Indicates that current group does not have a release corresponding to one defined in other groups.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>

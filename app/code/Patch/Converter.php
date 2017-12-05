@@ -1,5 +1,7 @@
 <?php
 
+require_once 'app/code/File/Filesystem.php';
+
 class Patch_Converter
 {
     private $converterToolPath = 'app/bin/patch-converter.php';

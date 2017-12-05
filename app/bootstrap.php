@@ -9,5 +9,6 @@ umask(0);
 define('DS', DIRECTORY_SEPARATOR);
 define('BP', dirname(__DIR__) . DS);
 
+define('VAR_DIR_NAME', 'var');
 define('UPLOAD_PATH', 'var/uploads/');
 define('STATS_PATH', 'var/stats/');

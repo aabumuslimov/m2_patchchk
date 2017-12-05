@@ -101,6 +101,7 @@ $().ready(function() {
                 errors = '';
             } else {
                 $('#results_div').show();
+                $('#legend_container_div').show();
             }
         }
     });
