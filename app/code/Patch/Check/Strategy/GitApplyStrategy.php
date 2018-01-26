@@ -8,8 +8,7 @@ class GitApplyStrategy extends AbstractStrategy
     {
         // git apply can't check patch properly if --directory option is used with absolute path
         $options = [
-            '--check' => null,
-            '-p0' => null
+            '--check' => null
         ];
 
         if ($revertMode) {
