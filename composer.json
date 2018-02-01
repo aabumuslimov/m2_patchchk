@@ -1,0 +1,48 @@
+{
+  "name": "aabumuslimov/m2_patchchk",
+  "description": "Visual tool to validate if the patch (code diff) file is applicable over a list of instances",
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "type": "project",
+  "license": "GNU",
+
+  "authors": [
+    {
+      "name": "Andrey Abumuslimov",
+      "email": "warpbox@gmail.com"
+    }
+  ],
+
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "isitnikov/m2-convert-patch-for-composer-install",
+        "version": "1.1.0",
+        "dist": {
+          "url": "https://raw.githubusercontent.com/isitnikov/m2-convert-patch-for-composer-install/master/convert-for-composer.php",
+          "type": "file"
+        }
+      }
+    }
+  ],
+
+  "require": {
+    "components/jquery": "3.2",
+    "isitnikov/m2-convert-patch-for-composer-install": "1.1.0"
+  },
+
+  "scripts": {
+    "post-install-cmd": [
+      "@copyJqueryMin",
+      "@copyPatchConverter"
+    ],
+    "post-update-cmd": [
+      "@copyJqueryMin",
+      "@copyPatchConverter"
+    ],
+
+    "copyJqueryMin": "cp -f vendor/components/jquery/jquery.min.js design/js/jquery/jquery.min.js",
+    "copyPatchConverter": "cp -f vendor/isitnikov/m2-convert-patch-for-composer-install/convert-for-composer.php app/bin/patch-converter.php"
+  }
+}

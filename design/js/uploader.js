@@ -5,7 +5,7 @@ $().ready(function() {
     var errors = "";
 
     $('#upload').mfupload({
-        type        : 'patch,sh',
+        type        : 'patch,diff,sh',
         maxsize     : 15,
         post_upload : 'index.php?action=upload',
         folder      : '/tmp/_patchchk_uploads/',
@@ -19,9 +19,7 @@ $().ready(function() {
         },
 
         start       : function(result) {
-            $('#result_table_ee tbody').html('');
-            $('#result_table_ce tbody').html('');
-            // $('#result_table_pe tbody').html('');
+            $('#results_div').html('');
 
             $('#uploaded').append("<div id='FILE" + result.fileno + "' class='files'>" + result.filename
                 + "<div id='PRO" + result.fileno + "' class='progress'></div></div>");
@@ -31,77 +29,62 @@ $().ready(function() {
             $('#PRO' + result.fileno).remove();
             $('#FILE' + result.fileno).html('Uploaded: ' + result.filename + ' (' + result.size + ')');
 
-            var output = '';
-            for (var release in result.checkResults.ee) {
-                var release = result.checkResults['ee'][release];
+            for (var groupName in result.check_results) {
+                var groupResults = result.check_results[groupName];
 
-                output += '<tr><td';
-                if (release.check_result == 'n/a') {
-                    if (release.release_name == 'n/a') {
-                        var column_content = '&nbsp;';
+                var output = '<table class="result_table">'
+                    + '<thead>'
+                        + '<tr class="header">'
+                            + '<td colspan="3">' + groupName + '</td>'
+                        + '</tr>'
+                        + '<tr class="subheader">'
+                            + '<td>Version</td>'
+                            + '<td>EE</td>'
+                            + '<td>Cloud</td>'
+                        + '</tr>'
+                    + '</thead>';
+
+                for (var release in groupResults) {
+                    var release = groupResults[release];
+
+                    output += '<tr><td';
+                    if (release.check_strategy == 'n/a') {
+                        if (release.instance_name == 'n/a') {
+                            var columnContent = '&nbsp;';
+                        } else {
+                            var columnContent = release.instance_name
+                        }
+                        output += ' colspan="3">' + columnContent;
+                    } else if (release.check_strategy == 'merged') {
+                        output += '>' + release.instance_name + '</td>'
+                            + '<td class="td_merged" colspan="2">Merged';
                     } else {
-                        var column_content = release.release_name
+                        var falseResultClass = 'td_fail';
+                        for (var strategyResult in release.check_strategy) {
+                            if (release.check_strategy[strategyResult] == 1) {
+                                falseResultClass = 'td_adaptation_required';
+                                break;
+                            }
+                        }
+
+                        output += '>' + release.instance_name + '</td>';
+                        if (release.check_strategy['patch'] == 1) {
+                            output += '<td class="td_ok">Ok';
+                        } else {
+                            output += '<td class="' + falseResultClass + '">No';
+                        }
+                        if (release.check_strategy['git_apply'] == 1) {
+                            output += '<td class="td_ok">Ok';
+                        } else {
+                            output += '<td class="' + falseResultClass + '">No';
+                        }
                     }
-                    output += ' colspan="2">' + column_content;
-                } else {
-                    output += '>' + release.release_name + '</td>';
-                    if (release.check_result == true) {
-                        output += '<td class="td_ok">Ok';
-                    } else {
-                        output += '<td class="td_fail">No';
-                    }
+                    output += '</td></tr>';
                 }
-                output += '</td></tr>';
+                output += '</table>';
+
+                $('#results_div').append(output);
             }
-            $('#result_table_ee tbody').html(output);
-
-            var output = '';
-            for (var release in result.checkResults.ce) {
-                var release = result.checkResults['ce'][release];
-
-                output += '<tr><td';
-                if (release.check_result == 'n/a') {
-                    if (release.release_name == 'n/a') {
-                        var column_content = '&nbsp;';
-                    } else {
-                        var column_content = release.release_name
-                    }
-                    output += ' colspan="2">' + column_content;
-                } else {
-                    output += '>' + release.release_name + '</td>';
-                    if (release.check_result == true) {
-                        output += '<td class="td_ok">Ok';
-                    } else {
-                        output += '<td class="td_fail">No';
-                    }
-                }
-                output += '</td></tr>';
-            }
-            $('#result_table_ce tbody').html(output);
-
-            // var output = '';
-            // for (var release in result.checkResults.pe) {
-            //     var release = result.checkResults['pe'][release];
-            //
-            //     output += '<tr><td';
-            //     if (release.check_result == 'n/a') {
-            //         if (release.release_name == 'n/a') {
-            //             var column_content = '&nbsp;';
-            //         } else {
-            //             var column_content = release.release_name
-            //         }
-            //         output += ' colspan="2">' + column_content;
-            //     } else {
-            //         output += '>' + release.release_name + '</td>';
-            //         if (release.check_result == true) {
-            //             output += '<td class="td_ok">Ok';
-            //         } else {
-            //             output += '<td class="td_fail">No';
-            //         }
-            //     }
-            //     output += '</td></tr>';
-            // }
-            // $('#result_table_pe tbody').html(output);
         },
 
         progress    : function(result) {
@@ -118,31 +101,8 @@ $().ready(function() {
                 errors = '';
             } else {
                 $('#results_div').show();
+                $('#legend_container_div').show();
             }
         }
     });
-
-    // $('#uploader_new button.plus').click(function(){
-    //     var parentLi = $(this).parent();
-    //     $(parentLi.clone(true)).insertAfter(parentLi);
-    // })
-    //
-    // $('#uploader_new button.minus').click(function(){
-    //     var parentLi = $(this).parent();
-    //     var parentUl = $(parentLi).parent();
-    //     if ($(parentUl).find('li').size() > 1) {
-    //         $(parentLi).remove();
-    //     }
-    // })
-    //
-    // $('#uploader_new ul li input[type="file"]').change(function(){
-    //     var value = $(this).val();
-    //     var fileExtension = ['sh', 'patch'];
-    //     if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
-    //         alert("Only formats are allowed: " + fileExtension.join(', '));
-    //         $(this).val('');
-    //         return false;
-    //     }
-    // })
-
 })

@@ -4,70 +4,117 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <script type="text/javascript" src="design/js/jquery/jquery-1.5.1.min.js"></script>
-    <script type="text/javascript" src="design/js/jquery/plugins/mfupload.js"></script>
-    <script type="text/javascript" src="design/js/uploader.js"></script>
+    <script type="text/javascript" src="design/js/jquery/jquery.min.js?<?php echo $design->getStaticHash() ?>"></script>
+    <script type="text/javascript" src="design/js/jquery/plugins/mfupload.js?<?php echo $design->getStaticHash() ?>"></script>
+    <script type="text/javascript" src="design/js/uploader.js?<?php echo $design->getStaticHash() ?>"></script>
+    <script type="text/javascript" src="design/js/script.js?<?php echo $design->getStaticHash() ?>"></script>
 
-    <link type="text/css" rel="stylesheet" href="design/style/style.css" media="all" />
-    <link type="text/css" rel="stylesheet" href="design/style/uploader.css" media="all" />
+    <link type="text/css" rel="stylesheet" href="design/style/style.css?<?php echo $design->getStaticHash() ?>" media="all" />
+    <link type="text/css" rel="stylesheet" href="design/style/uploader.css?<?php echo $design->getStaticHash() ?>" media="all" />
 
     <title>Patch check</title>
 </head>
 <body>
-<!--<button onclick="$('#uploader').hide(); $('#uploader_new').show();  $(this).hide();">Do you want to check few patches?</button>-->
 <br />
     <div id="main_content_div">
         <div id="uploader">
             <div id="upload"></div>
             <div id="uploaded"></div>
         </div>
-<!--        <div id="uploader_new" style="display: none">-->
-<!--            <form action="index.php?action=upload" enctype="multipart/form-data" method="post">-->
-<!--                <strong>Keep in mind, that these patches will be uploaded in following order</strong>-->
-<!--                <ul>-->
-<!--                    <li><input type="file" name="mf_file_uploader[]" /><button class="minus" type="button">-</button><button class="plus" type="button">+</button></li>-->
-<!--                </ul>-->
-<!--                <input type="submit" value="Upload" />-->
-<!--                <input type="hidden" name="folder" value="/tmp/_patchchk_uploads/" />-->
-<!--                <input type="hidden" name="file_element" value="mf_file_uploader" />-->
-<!--                <input type="hidden" name="no_ajax" value="1" />-->
-<!--            </form>-->
-<!--        </div>-->
-        <div id="results_div" <?php if (isset($result)): ?>style="display:block;"<?php endif; ?>>
-            <table id="result_table_ee" class="result_table">
-                <thead>
-                    <td colspan="2">EE results</td>
-                </thead>
-                <tbody><?php
-                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['ee'])):
-                        echo $patchChecker->drawResults($result['checkResults']['ee']);
-                    endif;
-                ?></tbody>
-            </table>
-<!--            <table id="result_table_ce" class="result_table">-->
-<!--                <thead>-->
-<!--                    <td colspan="2">CE results</td>-->
-<!--                </thead>-->
-<!--                <tbody>--><?php
-//                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['ce'])):
-//                        echo $patchChecker->drawResults($result['checkResults']['ce']);
-//                    endif;
-//                ?><!--</tbody>-->
-<!--            </table>-->
-<!--            <table id="result_table_pe" class="result_table">-->
-<!--                <thead>-->
-<!--                    <td colspan="2">PE results</td>-->
-<!--                </thead>-->
-<!--                <tbody>--><?php
-//                    if (isset($patchChecker) && isset($result['checkResults']) && isset($result['checkResults']['pe'])):
-//                        echo $patchChecker->drawResults($result['checkResults']['pe']);
-//                    endif;
-//                ?><!--</tbody>-->
-<!--            </table>-->
+        <div id="results_div" <?php if (isset($result['check_results'])): ?>style="display:block;"<?php endif; ?>>
+            <?php foreach($result['check_results'] as $name => $group): ?>
+                <table class="result_table">
+                    <thead>
+                        <tr>
+                            <td colspan="2"><?php echo $name ?></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($group as $release): ?>
+                            <tr>
+                                <?php if ($release['check_result'] === 'n/a'): ?>
+                                    <td colspan="3">
+                                        <?php echo ($release['release_name'] === 'n/a') ? '&nbsp;' : $release['release_name'] ?>
+                                    </td>
+                                <?php else: ?>
+                                    <td>
+                                        <?php echo $release['release_name'] ?>
+                                    </td>
+                                    <td class="<?php echo ($release['check_result']) ? 'td_ok' : 'td_fail' ?>">
+                                        <?php echo ($release['check_result']) ? 'Ok' : 'No' ?>
+                                    </td>
+                                    <td class="<?php echo ($release['check_git_result']) ? 'td_git_ok' : 'td_git_fail' ?>">
+                                        <?php echo ('a') ?>
+                                        <?php echo ($release['check_git_result']) ? 'Ok' : 'No' ?>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endforeach; ?>
         </div>
 
-        <div id="message_div">
-            <?php echo $messageList ?>
+        <div id="legend_container_div">
+            <div id="legend_header_div">Legend<span id="legend_fold_icon" class="fold_icon"></span></div>
+            <div id ="legend_body_div">
+                <table class="result_table legend_table">
+                    <thead>
+                        <tr class="subheader">
+                            <td>Status</td>
+                            <td>Description</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td_ok">Ok</td>
+                            <td class="description_td">Patch is applicable.</td>
+                        </tr>
+                        <tr>
+                            <td class="td_adaptation_required">No</td>
+                            <td class="description_td">
+                                Patch failed to apply by specific apply strategy, however it was successfully applied by other automated strategy.
+                                It means it can be easily ported without complete workflow escalation process.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td_merged">Merged</td>
+                            <td class="description_td">Solution is already merged to a release.</td>
+                        </tr>
+                        <tr>
+                            <td class="td_fail">No</td>
+                            <td class="description_td">
+                                Patch failed to apply.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="result_table legend_table">
+                    <thead>
+                        <tr class="subheader">
+                            <td colspan="3">Release</td>
+                            <td>Description</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2.1.0</td>
+                            <td class="td_ok">Ok</td>
+                            <td class="td_adaptation_required">No</td>
+                            <td class="description_td">Validation was made for the specific release and the results are provided.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">2.0.22</td>
+                            <td class="description_td">Release is declared in a config, but the corresponding code base is not found or has wrong permissions.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">&nbsp;</td>
+                            <td class="description_td">Placeholder. Indicates that current group does not have a release corresponding to one defined in other groups.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>
