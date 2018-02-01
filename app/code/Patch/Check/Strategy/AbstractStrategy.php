@@ -4,6 +4,14 @@ abstract class AbstractStrategy implements StrategyInterface
 {
     protected $strategyName;
 
+    /**
+     * Defines if the patch file should be converted to some specific format before check
+     * or the original format should be preserved.
+     *
+     * @var bool
+     */
+    protected $isPreserveOriginalFileFormat = false;
+
     abstract protected function getCommand($patchPath, $instancePath, $revertMode = false);
 
     protected function renderOptions($options)
@@ -23,6 +31,11 @@ abstract class AbstractStrategy implements StrategyInterface
     public function getStrategyName()
     {
         return $this->strategyName;
+    }
+
+    public function getIsPreserveOriginalFileFormat()
+    {
+        return $this->isPreserveOriginalFileFormat;
     }
 
     protected function executeCommand($command)

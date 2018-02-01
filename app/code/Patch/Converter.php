@@ -7,15 +7,14 @@ class Patch_Converter
     private $converterToolPath = 'app/bin/patch-converter.php';
 
 
-    public function convert($sourcePath, $options, $destPath = null)
+    public function convert($sourcePath, $options, $destPath, $removePathPrefix = true)
     {
-        $destPath = strlen($destPath)
-            ? $destPath
-            : $sourcePath;
-
         exec("php {$this->converterToolPath} {$options} {$sourcePath} > {$destPath}", $output, $status);
-
         Filesystem::getInstance()->registerTmpFile($destPath);
+
+        if (!$status && $removePathPrefix) {
+            $status = !file_put_contents($destPath, $this->removePathPrefix(file_get_contents($destPath)));
+        }
 
         return !$status;
     }
@@ -46,7 +45,6 @@ class Patch_Converter
         if (pathinfo($path, PATHINFO_EXTENSION) == 'sh') {
             $content = $this->extractPatchFromSh($content);
         }
-        $content = $this->removePathPrefix($content);
         Filesystem::getInstance()->createTmpFile($path, $content);
     }
 }

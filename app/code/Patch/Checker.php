@@ -70,9 +70,13 @@ class Patch_Checker
                     continue;
                 }
 
-                $patchPath = $this->getPatchForInstanceType($instance->getInstanceType());
+                $patchForInstancePath = $this->getPatchForInstanceType($instance->getInstanceType());
                 $checkResult = [];
                 foreach ($this->strategyManager->getStrategyList() as $strategy) {
+                    $patchPath = ($strategy->getIsPreserveOriginalFileFormat())
+                        ? BP . UPLOAD_PATH . $this->originalPatchPath
+                        : $patchForInstancePath;
+
                     $strategyResult = $strategy->check($patchPath, $instance->getInstancePath());
 
                     if ($strategyResult == self::PATCH_APPLY_RESULT_MERGED) {
