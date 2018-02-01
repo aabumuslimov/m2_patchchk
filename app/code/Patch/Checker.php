@@ -74,7 +74,7 @@ class Patch_Checker
                 $checkResult = [];
                 foreach ($this->strategyManager->getStrategyList() as $strategy) {
                     $patchPath = ($strategy->getIsPreserveOriginalFileFormat())
-                        ? BP . UPLOAD_PATH . $this->originalPatchPath
+                        ? $this->originalPatchPath
                         : $patchForInstancePath;
 
                     $strategyResult = $strategy->check($patchPath, $instance->getInstancePath());
