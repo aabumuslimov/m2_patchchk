@@ -1,4 +1,4 @@
-/* Main style for patch check tool */
+/* Main style for patch checker tool */
 
 body {
     background-color: #EEE;
@@ -9,16 +9,26 @@ div {
     float: left;
 }
 
-span.error_span {
-    color: #F33;
-}
-
 div#results_div {
     clear: both;
     padding: 32px;
 }
 div#results_div {
     display: none;
+}
+
+div#footer_div {
+    width: 100%;
+    border-top: 1px #DDD solid;
+    margin: 20px 0;
+    padding-top: 6px;
+    text-align: center;
+    color: #BBB;
+    font-size: 10px;
+}
+
+div#footer_div a {
+    color: #BBB;
 }
 
 table.result_table thead tr.header td {
