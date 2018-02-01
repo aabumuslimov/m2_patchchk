@@ -17,10 +17,10 @@
     {
       "type": "package",
       "package": {
-        "name": "isitnikov/m2-convert-patch-for-composer-install",
-        "version": "1.1.0",
+        "name": "aabumuslimov/m2-convert-patch-for-composer-install",
+        "version": "1.2.0",
         "dist": {
-          "url": "https://raw.githubusercontent.com/isitnikov/m2-convert-patch-for-composer-install/master/convert-for-composer.php",
+          "url": "https://raw.githubusercontent.com/aabumuslimov/m2-convert-patch-for-composer-install/Issue-9/convert-for-composer.php",
           "type": "file"
         }
       }
@@ -29,7 +29,7 @@
 
   "require": {
     "components/jquery": "3.2",
-    "isitnikov/m2-convert-patch-for-composer-install": "1.1.0"
+    "aabumuslimov/m2-convert-patch-for-composer-install": "1.2.0"
   },
 
   "scripts": {
@@ -43,6 +43,6 @@
     ],
 
     "copyJqueryMin": "cp -f vendor/components/jquery/jquery.min.js design/js/jquery/jquery.min.js",
-    "copyPatchConverter": "cp -f vendor/isitnikov/m2-convert-patch-for-composer-install/convert-for-composer.php app/bin/patch-converter.php"
+    "copyPatchConverter": "cp -f vendor/aabumuslimov/m2-convert-patch-for-composer-install/convert-for-composer.php app/bin/patch-converter.php"
   }
 }
