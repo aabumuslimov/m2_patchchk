@@ -18,9 +18,9 @@
       "type": "package",
       "package": {
         "name": "aabumuslimov/m2-convert-patch-for-composer-install",
-        "version": "1.2.0",
+        "version": "1.2.1",
         "dist": {
-          "url": "https://raw.githubusercontent.com/aabumuslimov/m2-convert-patch-for-composer-install/Issue-9/convert-for-composer.php",
+          "url": "https://raw.githubusercontent.com/aabumuslimov/m2-convert-patch-for-composer-install/Issue-11/convert-for-composer.php",
           "type": "file"
         }
       }
