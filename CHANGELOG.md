@@ -16,7 +16,6 @@
 * Improvements:
     * Implemented a separate validation for "git apply" used at cloud patch apply strategy
     * Implemented static content basic versioning to prevent loading outdated browser cache content after upgrade
-    * Added validation for already merged changes by running patch revert in dry-run mode
     * Implemented dependency management via composer
     * Updated a dependency for the patch converter tool (https://github.com/isitnikov/m2-convert-patch-for-composer-install/issues/9)
     * Added info block about the tool version
@@ -27,5 +26,6 @@
 1.5
 -----
 * Improvements:
+    * Added validation for already merged changes by running patch revert in dry-run mode
     * Added .htaccess to var/ and vendor/
     * Implemented legend description for statuses and releases grid.
