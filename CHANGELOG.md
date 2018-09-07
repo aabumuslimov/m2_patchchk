@@ -1,3 +1,5 @@
+1.6.3
+-----
 * Fixed bugs:
     * Updated a dependency for the patch converter tool (issue with convert renamed file names - https://github.com/isitnikov/m2-convert-patch-for-composer-install/pull/13)
 
