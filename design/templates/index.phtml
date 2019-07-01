@@ -21,38 +21,40 @@
             <div id="upload"></div>
             <div id="uploaded"></div>
         </div>
-        <div id="results_div" <?php if (isset($result['check_results'])): ?>style="display:block;"<?php endif; ?>>
-            <?php foreach($result['check_results'] as $name => $group): ?>
-                <table class="result_table">
-                    <thead>
-                        <tr>
-                            <td colspan="2"><?php echo $name ?></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($group as $release): ?>
+        <div id="results_div">
+            <?php if (isset($result['check_results'])): ?>
+                <?php foreach($result['check_results'] as $name => $group): ?>
+                    <table class="result_table">
+                        <thead>
                             <tr>
-                                <?php if ($release['check_result'] === 'n/a'): ?>
-                                    <td colspan="3">
-                                        <?php echo ($release['release_name'] === 'n/a') ? '&nbsp;' : $release['release_name'] ?>
-                                    </td>
-                                <?php else: ?>
-                                    <td>
-                                        <?php echo $release['release_name'] ?>
-                                    </td>
-                                    <td class="<?php echo ($release['check_result']) ? 'td_ok' : 'td_fail' ?>">
-                                        <?php echo ($release['check_result']) ? 'Ok' : 'No' ?>
-                                    </td>
-                                    <td class="<?php echo ($release['check_git_result']) ? 'td_git_ok' : 'td_git_fail' ?>">
-                                        <?php echo ('a') ?>
-                                        <?php echo ($release['check_git_result']) ? 'Ok' : 'No' ?>
-                                    </td>
-                                <?php endif; ?>
+                                <td colspan="2"><?php echo $name ?></td>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            <?php endforeach; ?>
+                        </thead>
+                        <tbody>
+                            <?php foreach($group as $release): ?>
+                                <tr>
+                                    <?php if ($release['check_result'] === 'n/a'): ?>
+                                        <td colspan="3">
+                                            <?php echo ($release['release_name'] === 'n/a') ? '&nbsp;' : $release['release_name'] ?>
+                                        </td>
+                                    <?php else: ?>
+                                        <td>
+                                            <?php echo $release['release_name'] ?>
+                                        </td>
+                                        <td class="<?php echo ($release['check_result']) ? 'td_ok' : 'td_fail' ?>">
+                                            <?php echo ($release['check_result']) ? 'Ok' : 'No' ?>
+                                        </td>
+                                        <td class="<?php echo ($release['check_git_result']) ? 'td_git_ok' : 'td_git_fail' ?>">
+                                            <?php echo ('a') ?>
+                                            <?php echo ($release['check_git_result']) ? 'Ok' : 'No' ?>
+                                        </td>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
 
         <div id="legend_container_div">

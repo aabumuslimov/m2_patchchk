@@ -12,8 +12,6 @@ div {
 div#results_div {
     clear: both;
     padding: 32px;
-}
-div#results_div {
     display: none;
 }
 
