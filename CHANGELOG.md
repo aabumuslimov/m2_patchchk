@@ -1,3 +1,8 @@
+1.6.4
+-----
+* Fixed bugs:
+    * Fixed the issue with Undefined variable: result in /.../design/templates/index.phtml on line 25
+
 1.6.3
 -----
 * Fixed bugs:
