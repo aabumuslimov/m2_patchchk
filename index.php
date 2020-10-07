@@ -9,8 +9,12 @@ try {
         $fileUploader = new \Magento\PatchChecker\File\Uploader(['upload_path' => BP . UPLOAD_PATH]);
         $result = $fileUploader->upload();
 
-        $patchChecker = new \Magento\PatchChecker\Patch\Checker(BP . UPLOAD_PATH . $result['new_file_name'][0]);
-        $checkResults = $patchChecker->checkPatchForAllReleases();
+        $patchChecker = new \Magento\PatchChecker\Patch\Checker(
+            new \Magento\PatchChecker\Deploy\InstanceManager(),
+            new \Magento\PatchChecker\Patch\Check\StrategyManager(),
+            new \Magento\PatchChecker\Patch\InstancePatchConverter(new \Magento\PatchChecker\Patch\Converter())
+        );
+        $checkResults = $patchChecker->check(BP . UPLOAD_PATH . $result['new_file_name'][0]);
         $result = $result['result'];
         $result['check_results'] = $checkResults;
 
@@ -23,6 +27,25 @@ try {
                     file_put_contents($statsPath . 'stats.log', $data, FILE_APPEND);
                 }
             }
+        }
+
+        echo json_encode($result);
+        die;
+    } elseif (!empty($_POST['patch_id'])) {
+        $result = [
+            'check_results' => [],
+            'error' => '',
+        ];
+        try {
+            $patchChecker = new \Magento\PatchChecker\Patch\MQP\Checker(
+                new \Magento\PatchChecker\Deploy\InstanceManager(),
+                new \Magento\PatchChecker\Patch\Check\StrategyManager(),
+                new \Magento\PatchChecker\Patch\MQP\PatchRepository(new \Magento\QualityPatches\Info()),
+                new \Magento\PatchChecker\Patch\MQP\VersionsManager
+            );
+            $result['check_results'] = $patchChecker->check($_POST['patch_id']);
+        } catch (\Exception $exception) {
+            $result['error'] = "Invalid Patch ID";
         }
 
         echo json_encode($result);

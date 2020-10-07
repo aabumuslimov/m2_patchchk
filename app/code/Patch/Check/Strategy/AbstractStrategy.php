@@ -56,7 +56,7 @@ abstract class AbstractStrategy implements StrategyInterface
     public function check($patchPath, $instancePath)
     {
         if (!$patchPath) {
-            return false;
+            return Checker::PATCH_APPLY_RESULT_FAILED;
         }
 
         $result = $this->executeCommand($this->getCommand($patchPath, $instancePath));
@@ -68,5 +68,7 @@ abstract class AbstractStrategy implements StrategyInterface
         if (!$result) {
             return Checker::PATCH_APPLY_RESULT_MERGED;
         }
+
+        return Checker::PATCH_APPLY_RESULT_FAILED;
     }
 }

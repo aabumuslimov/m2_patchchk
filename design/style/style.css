@@ -9,6 +9,33 @@ div {
     float: left;
 }
 
+div#mqp_form_container, div#separator {
+    clear: both;
+    margin-top: 10px;
+}
+
+div#mqp_form_container {
+    width: 760px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+div#separator {
+    width: 760px;
+    text-align: center;
+}
+
+form#mqp_form{
+    margin-top: 10px;
+}
+
+span#mqp_error_patch_id {
+    display: block;
+    margin: 5px 0;
+    font-size: 12px;
+    color: red;
+}
+
 div#results_div {
     clear: both;
     padding: 32px;
