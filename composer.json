@@ -27,6 +27,12 @@
     }
   ],
 
+  "autoload": {
+    "psr-4": {
+      "Magento\\PatchChecker\\": "app/code/"
+    }
+  },
+
   "require": {
     "components/jquery": "3.2",
     "isitnikov/m2-convert-patch-for-composer-install": "1.2.2"

@@ -1,6 +1,13 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-class Deploy_Instance
+namespace Magento\PatchChecker\Deploy;
+
+class Instance
 {
     const INSTANCE_TYPE_GIT      = 'git';
     const INSTANCE_TYPE_COMPOSER = 'composer';

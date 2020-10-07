@@ -1,6 +1,13 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-class Cache_File
+namespace Magento\PatchChecker\Cache;
+
+class File
 {
     const CACHE_DIR_NAME = 'cache';
 
@@ -24,7 +31,7 @@ class Cache_File
             } elseif (!is_dir($cachePath) || !is_writable($cachePath)) {
                 $cachePath = '/tmp';
                 if (!$this->validateWritablePath($cachePath)) {
-                    throw new Exception('Cache dir is not writable.');
+                    throw new \Exception('Cache dir is not writable.');
                 }
             }
         }

@@ -6,12 +6,10 @@ $action = (isset($_GET['action'])) ? $_GET['action'] : false;
 
 try {
     if ($action == 'upload' && !empty($_POST)) {
-        require_once 'app/code/File/Uploader.php';
-        $fileUploader = new File_Uploader(['upload_path' => BP . UPLOAD_PATH]);
+        $fileUploader = new \Magento\PatchChecker\File\Uploader(['upload_path' => BP . UPLOAD_PATH]);
         $result = $fileUploader->upload();
 
-        require_once 'app/code/Patch/Checker.php';
-        $patchChecker = new Patch_Checker(BP . UPLOAD_PATH . $result['new_file_name'][0]);
+        $patchChecker = new \Magento\PatchChecker\Patch\Checker(BP . UPLOAD_PATH . $result['new_file_name'][0]);
         $checkResults = $patchChecker->checkPatchForAllReleases();
         $result = $result['result'];
         $result['check_results'] = $checkResults;
@@ -34,7 +32,6 @@ try {
     // @TODO Implement logging
 }
 
-require_once 'app/code/Design.php';
-$design = new Design();
+$design = new \Magento\PatchChecker\Design();
 
 require_once 'design/templates/index.phtml';

@@ -1,9 +1,15 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-require_once 'app/code/Patch/Check/Strategy/StrategyInterface.php';
-require_once 'app/code/Patch/Check/Strategy/AbstractStrategy.php';
-require_once 'app/code/Patch/Check/Strategy/PatchStrategy.php';
-require_once 'app/code/Patch/Check/Strategy/GitApplyStrategy.php';
+namespace Magento\PatchChecker\Patch\Check;
+
+use Magento\PatchChecker\Patch\Check\Strategy\GitApplyStrategy;
+use Magento\PatchChecker\Patch\Check\Strategy\PatchStrategy;
+use Magento\PatchChecker\Patch\Check\Strategy\StrategyInterface;
 
 class StrategyManager
 {
