@@ -56,5 +56,6 @@ try {
 }
 
 $design = new \Magento\PatchChecker\Design();
+$mqpVersion = new \Magento\PatchChecker\Patch\MQP\Version();
 
 require_once 'design/templates/index.phtml';

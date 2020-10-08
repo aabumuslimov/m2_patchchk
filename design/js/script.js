@@ -57,15 +57,15 @@ $().ready(function () {
         for (groupName in result.check_results) {
             groupResults = result.check_results[groupName];
 
-            var output = '<table class="result_table">'
+            var output = '<table class="result_table release_table">'
                 + '<thead>'
                 + '<tr class="header">'
                 + '<td colspan="3">' + groupName + '</td>'
                 + '</tr>'
                 + '<tr class="subheader">'
                 + '<td>Version</td>'
-                + '<td>Patch</td>'
-                + '<td>Git</td>'
+                + '<td>Applied using Patch</td>'
+                + '<td>Applied using Git</td>'
                 + '</tr>'
                 + '</thead>';
 
@@ -96,12 +96,12 @@ $().ready(function () {
                     if (release.check_strategy['patch'] == 1) {
                         output += '<td class="td_ok">Ok';
                     } else {
-                        output += '<td class="' + falseResultClass + '">No';
+                        output += '<td class="' + falseResultClass + '">Fail';
                     }
                     if (release.check_strategy['git_apply'] == 1) {
                         output += '<td class="td_ok">Ok';
                     } else {
-                        output += '<td class="' + falseResultClass + '">No';
+                        output += '<td class="' + falseResultClass + '">Fail';
                     }
                 }
                 output += '</td></tr>';
