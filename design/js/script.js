@@ -88,7 +88,7 @@ $().ready(function () {
                         + '<td class="td_merged" colspan="2">Merged';
                 } else if (release.result === 1) {
                     output += '>' + release.instance_name + '</td>'
-                        + '<td class="td_ok colspan_2">Ok';
+                        + '<td class="td_ok colspan_2">Yes';
                 } else if (release.result === 0) {
                     output += '>' + release.instance_name + '</td>'
                         + '<td class="td_fail colspan_2">No';
@@ -103,12 +103,12 @@ $().ready(function () {
 
                     output += '>' + release.instance_name + '</td>';
                     if (release.result['patch'] === 1) {
-                        output += '<td class="td_ok">Ok';
+                        output += '<td class="td_ok">Yes';
                     } else {
                         output += '<td class="' + falseResultClass + '">No';
                     }
                     if (release.result['git_apply'] === 1) {
-                        output += '<td class="td_ok">Ok';
+                        output += '<td class="td_ok">Yes';
                     } else {
                         output += '<td class="' + falseResultClass + '">No';
                     }
