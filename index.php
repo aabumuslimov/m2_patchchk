@@ -46,7 +46,8 @@ try {
             $result['check_results'] = $patchChecker->check($_POST['patch_id']);
             $result['check_method'] = 'mqp';
         } catch (\Exception $exception) {
-            $result['error'] = "Invalid Patch ID";
+            $mqpVersion = new \Magento\PatchChecker\Patch\MQP\Version();
+            $result['error'] = "Patch ID '{$_POST['patch_id']}' is not found in MQP $mqpVersion";
         }
 
         echo json_encode($result);
