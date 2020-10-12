@@ -21,42 +21,17 @@
             <div id="upload"></div>
             <div id="uploaded"></div>
         </div>
-        <div id="results_div">
-            <?php if (isset($result['check_results'])): ?>
-                <?php foreach($result['check_results'] as $name => $group): ?>
-                    <table class="result_table">
-                        <thead>
-                            <tr>
-                                <td colspan="2"><?php echo $name ?></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($group as $release): ?>
-                                <tr>
-                                    <?php if ($release['check_result'] === 'n/a'): ?>
-                                        <td colspan="3">
-                                            <?php echo ($release['release_name'] === 'n/a') ? '&nbsp;' : $release['release_name'] ?>
-                                        </td>
-                                    <?php else: ?>
-                                        <td>
-                                            <?php echo $release['release_name'] ?>
-                                        </td>
-                                        <td class="<?php echo ($release['check_result']) ? 'td_ok' : 'td_fail' ?>">
-                                            <?php echo ($release['check_result']) ? 'Ok' : 'No' ?>
-                                        </td>
-                                        <td class="<?php echo ($release['check_git_result']) ? 'td_git_ok' : 'td_git_fail' ?>">
-                                            <?php echo ('a') ?>
-                                            <?php echo ($release['check_git_result']) ? 'Ok' : 'No' ?>
-                                        </td>
-                                    <?php endif; ?>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php endforeach; ?>
-            <?php endif; ?>
+        <div id="separator">-OR-</div>
+        <div id="mqp_form_container">
+            <span>Enter MQP Patch ID</span>
+            <form id="mqp_form" action="index.php">
+                <input id="mqp_input_patch_id" name="patch_id" type="text" value="<?php echo $_GET['patch_id'] ?? '' ?>" placeholder="MDVA-3333">
+                <button type="submit">Check</button>
+                <span id="mqp_version">MQP version <?php echo $mqpVersion ?></span>
+                <span id="mqp_error_patch_id"></span>
+            </form>
         </div>
-
+        <div id="results_div"></div>
         <div id="legend_container_div">
             <div id="legend_header_div">Legend<span id="legend_fold_icon" class="fold_icon"></span></div>
             <div id ="legend_body_div">
@@ -69,7 +44,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="td_ok">Ok</td>
+                            <td class="td_ok">Yes</td>
                             <td class="description_td">Patch is applicable.</td>
                         </tr>
                         <tr>
@@ -102,7 +77,7 @@
                     <tbody>
                         <tr>
                             <td>2.1.0</td>
-                            <td class="td_ok">Ok</td>
+                            <td class="td_ok">Yes</td>
                             <td class="td_adaptation_required">No</td>
                             <td class="description_td">Validation was made for the specific release and the results are provided.</td>
                         </tr>

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
+
+namespace Magento\PatchChecker\Patch\Check\Strategy;
+
+use Magento\PatchChecker\Patch\Checker;
 
 abstract class AbstractStrategy implements StrategyInterface
 {
@@ -47,17 +56,19 @@ abstract class AbstractStrategy implements StrategyInterface
     public function check($patchPath, $instancePath)
     {
         if (!$patchPath) {
-            return false;
+            return Checker::PATCH_APPLY_RESULT_FAILED;
         }
 
         $result = $this->executeCommand($this->getCommand($patchPath, $instancePath));
         if (!$result) {
-            return Patch_Checker::PATCH_APPLY_RESULT_SUCCESSFUL;
+            return Checker::PATCH_APPLY_RESULT_SUCCESSFUL;
         }
 
         $result = $this->executeCommand($this->getCommand($patchPath, $instancePath, true));
         if (!$result) {
-            return Patch_Checker::PATCH_APPLY_RESULT_MERGED;
+            return Checker::PATCH_APPLY_RESULT_MERGED;
         }
+
+        return Checker::PATCH_APPLY_RESULT_FAILED;
     }
 }

@@ -24,12 +24,23 @@
           "type": "file"
         }
       }
+    },
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com"
     }
   ],
 
+  "autoload": {
+    "psr-4": {
+      "Magento\\PatchChecker\\": "app/code/"
+    }
+  },
+
   "require": {
     "components/jquery": "3.2",
-    "isitnikov/m2-convert-patch-for-composer-install": "1.2.2"
+    "isitnikov/m2-convert-patch-for-composer-install": "1.2.2",
+    "magento/quality-patches": "^1.0"
   },
 
   "scripts": {

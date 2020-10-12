@@ -1,8 +1,15 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-require_once 'app/code/File/Filesystem.php';
+namespace Magento\PatchChecker\Patch;
 
-class Patch_Converter
+use Magento\PatchChecker\File\Filesystem;
+
+class Converter
 {
     private $converterToolPath = 'app/bin/patch-converter.php';
 

@@ -1,99 +1,65 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-require_once 'app/code/Deploy/InstanceManager.php';
-require_once 'app/code/Patch/Check/StrategyManager.php';
-require_once 'app/code/Patch/Converter.php';
+namespace Magento\PatchChecker\Patch;
 
-class Patch_Checker
+use Magento\PatchChecker\Deploy\Instance;
+use Magento\PatchChecker\Deploy\InstanceManager;
+use Magento\PatchChecker\Patch\Check\StrategyManager;
+
+/**
+ * Patch checker
+ */
+class Checker extends AbstractChecker
 {
-    const PATCH_APPLY_RESULT_FAILED     = 0;
-    const PATCH_APPLY_RESULT_SUCCESSFUL = 1;
-    const PATCH_APPLY_RESULT_MERGED     = 2;
-
-
-    private $instanceManager;
-
+    /**
+     * @var InstancePatchConverter
+     */
+    private $patchConverter;
+    /**
+     * @var StrategyManager
+     */
     private $strategyManager;
 
-    private $patchConverter;
-
-    private $originalPatchPath;
-
-    private $patchPerInstanceType = [];
-
-
-    public function __construct($patchPath)
-    {
-        $this->originalPatchPath    = $patchPath;
-        $this->instanceManager      = new Deploy_InstanceManager();
-        $this->strategyManager      = new StrategyManager();
-        $this->patchConverter       = new Patch_Converter();
+    /**
+     * @param InstanceManager $instanceManager
+     * @param StrategyManager $strategyManager
+     * @param InstancePatchConverter $patchConverter
+     */
+    public function __construct(
+        InstanceManager $instanceManager,
+        StrategyManager $strategyManager,
+        InstancePatchConverter $patchConverter
+    ) {
+        parent::__construct($instanceManager);
+        $this->patchConverter = $patchConverter;
+        $this->strategyManager = $strategyManager;
     }
 
-    private function getPatchForInstanceType($instanceType)
+    /**
+     * @inheritDoc
+     */
+    public function getResult(Instance $instance, string $patch)
     {
-        if (!isset($this->patchPerInstanceType[$instanceType])) {
-            $patchPath = false;
-            if ($instanceType == Deploy_Instance::INSTANCE_TYPE_GIT) {
-                $patchPath = BP . UPLOAD_PATH . pathinfo($this->originalPatchPath, PATHINFO_FILENAME) . '.git.patch';
-                $isConverted = $this->patchConverter->convertFromComposerToGitFormat($this->originalPatchPath, $patchPath);
-                if (!$isConverted) {
-                    $patchPath = false;
-                }
-            } elseif ($instanceType == Deploy_Instance::INSTANCE_TYPE_COMPOSER) {
-                $patchPath = BP . UPLOAD_PATH . pathinfo($this->originalPatchPath, PATHINFO_FILENAME) . '.composer.patch';
-                $isConverted = $this->patchConverter->convertFromGitToComposerFormat($this->originalPatchPath, $patchPath);
-                if (!$isConverted) {
-                    $patchPath = false;
-                }
-            }
+        $patchForInstancePath = $this->patchConverter->convert($patch, $instance->getInstanceType());
+        $checkResult = [];
+        foreach ($this->strategyManager->getStrategyList() as $strategy) {
+            $patchPath = ($strategy->getIsPreserveOriginalFileFormat())
+                ? $patch
+                : $patchForInstancePath;
+            $strategyResult = $strategy->check($patchPath, $instance->getInstancePath());
 
-            $this->patchPerInstanceType[$instanceType] = $patchPath;
+            if ($strategyResult === self::PATCH_APPLY_RESULT_MERGED) {
+                $checkResult = 'merged';
+                break;
+            }
+            $checkResult[$strategy->getStrategyName()] = $strategyResult;
         }
 
-        return $this->patchPerInstanceType[$instanceType];
-    }
-
-    public function checkPatchForAllReleases()
-    {
-        $result = [];
-        foreach ($this->instanceManager->getInstanceList() as $groupName => $groupInstanceList) {
-            foreach ($groupInstanceList as $instance) {
-                if (is_int($instance)) {
-                    for ($i = 0; $i < $instance; $i++) {
-                        $result[$groupName][] = ['instance_name' => 'n/a', 'check_strategy' => 'n/a'];
-                    }
-                    continue;
-                }
-                if ($instance->getInstanceType() == Deploy_Instance::INSTANCE_TYPE_INVALID) {
-                    $result[$groupName][] = ['instance_name' => $instance->getInstanceName(), 'check_strategy' => 'n/a'];
-                    continue;
-                }
-
-                $patchForInstancePath = $this->getPatchForInstanceType($instance->getInstanceType());
-                $checkResult = [];
-                foreach ($this->strategyManager->getStrategyList() as $strategy) {
-                    $patchPath = ($strategy->getIsPreserveOriginalFileFormat())
-                        ? $this->originalPatchPath
-                        : $patchForInstancePath;
-
-                    $strategyResult = $strategy->check($patchPath, $instance->getInstancePath());
-
-                    if ($strategyResult == self::PATCH_APPLY_RESULT_MERGED) {
-                        $checkResult = 'merged';
-                        break;
-                    }
-
-                    $checkResult[$strategy->getStrategyName()] = $strategyResult;
-                }
-
-                $result[$groupName][] = [
-                    'instance_name'  => $instance->getInstanceName(),
-                    'check_strategy' => $checkResult
-                ];
-            }
-        }
-
-        return $result;
+        return $checkResult;
     }
 }

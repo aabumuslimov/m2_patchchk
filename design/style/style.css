@@ -9,6 +9,39 @@ div {
     float: left;
 }
 
+div#mqp_form_container, div#separator {
+    clear: both;
+    margin-top: 10px;
+}
+
+div#mqp_form_container {
+    width: 760px;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+div#separator {
+    width: 760px;
+    text-align: center;
+}
+
+form#mqp_form{
+    margin-top: 10px;
+}
+
+span#mqp_error_patch_id {
+    display: block;
+    margin: 5px 0;
+    font-size: 12px;
+    color: red;
+}
+
+span#mqp_version {
+    display: block;
+    margin: 5px 0;
+    font-size: 10px;
+}
+
 div#results_div {
     clear: both;
     padding: 32px;
@@ -45,6 +78,7 @@ table.result_table {
     display: block;
     float: left;
     margin-right: 40px;
+    margin-top: 20px;
     border-collapse: collapse;
 }
 td.td_fail {
@@ -60,6 +94,12 @@ td.td_merged {
     background-color: #C899D7;
 }
 
+table.release_table td {
+    width: 60px;
+}
+table.release_table td.colspan_2 {
+    width: 131px;
+}
 table.result_table tr td {
     padding: 2px 10px;
 }

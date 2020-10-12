@@ -6,16 +6,18 @@ $action = (isset($_GET['action'])) ? $_GET['action'] : false;
 
 try {
     if ($action == 'upload' && !empty($_POST)) {
-        require_once 'app/code/File/Uploader.php';
-        $fileUploader = new File_Uploader(['upload_path' => BP . UPLOAD_PATH]);
+        $fileUploader = new \Magento\PatchChecker\File\Uploader(['upload_path' => BP . UPLOAD_PATH]);
         $result = $fileUploader->upload();
 
-        require_once 'app/code/Patch/Checker.php';
-        $patchChecker = new Patch_Checker(BP . UPLOAD_PATH . $result['new_file_name'][0]);
-        $checkResults = $patchChecker->checkPatchForAllReleases();
+        $patchChecker = new \Magento\PatchChecker\Patch\Checker(
+            new \Magento\PatchChecker\Deploy\InstanceManager(),
+            new \Magento\PatchChecker\Patch\Check\StrategyManager(),
+            new \Magento\PatchChecker\Patch\InstancePatchConverter(new \Magento\PatchChecker\Patch\Converter())
+        );
+        $checkResults = $patchChecker->check(BP . UPLOAD_PATH . $result['new_file_name'][0]);
         $result = $result['result'];
         $result['check_results'] = $checkResults;
-
+        $result['check_method'] = 'file';
         // checked patches statistic collection
         if (isset($result['filename'])) {
             $statsPath = BP . STATS_PATH;
@@ -29,12 +31,33 @@ try {
 
         echo json_encode($result);
         die;
+    } elseif (!empty($_POST['patch_id'])) {
+        $result = [
+            'check_results' => [],
+            'check_method' => 'mqp',
+            'error' => '',
+        ];
+        try {
+            $patchChecker = new \Magento\PatchChecker\Patch\MQP\Checker(
+                new \Magento\PatchChecker\Deploy\InstanceManager(),
+                new \Magento\PatchChecker\Patch\MQP\PatchRepository(new \Magento\QualityPatches\Info()),
+                new \Magento\PatchChecker\Patch\MQP\VersionsManager
+            );
+            $result['check_results'] = $patchChecker->check($_POST['patch_id']);
+            $result['check_method'] = 'mqp';
+        } catch (\Exception $exception) {
+            $mqpVersion = new \Magento\PatchChecker\Patch\MQP\Version();
+            $result['error'] = "Patch ID '{$_POST['patch_id']}' is not found in MQP $mqpVersion";
+        }
+
+        echo json_encode($result);
+        die;
     }
 } catch (Exception $e) {
     // @TODO Implement logging
 }
 
-require_once 'app/code/Design.php';
-$design = new Design();
+$design = new \Magento\PatchChecker\Design();
+$mqpVersion = new \Magento\PatchChecker\Patch\MQP\Version();
 
 require_once 'design/templates/index.phtml';

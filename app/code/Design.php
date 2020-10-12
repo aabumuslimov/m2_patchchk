@@ -1,6 +1,13 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-require_once 'app/code/Cache/File.php';
+namespace Magento\PatchChecker;
+
+use Magento\PatchChecker\Cache\File;
 
 class Design
 {
@@ -32,7 +39,7 @@ class Design
 
     public function getStaticHash()
     {
-        $cache = new Cache_File();
+        $cache = new File();
         $content = $cache->loadCache(self::STATIC_HASH_CACHE_ID);
         if (!$content) {
             $content = $this->generateStaticHash();

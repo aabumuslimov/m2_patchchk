@@ -1,6 +1,15 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-class File_Uploader
+namespace Magento\PatchChecker\File;
+
+use Magento\PatchChecker\Patch\Converter;
+
+class Uploader
 {
     protected $_maximumFileSize = 15728640; // 15Mb
 
@@ -94,8 +103,7 @@ class File_Uploader
                 $newFileName[$fileId] = $this->getHashedFileName($name) . '.patch';
                 $patchPath = $this->_uploadPath . $newFileName[$fileId];
                 if (move_uploaded_file($_FILES[$fileElementName]['tmp_name'][$fileId], $patchPath)) {
-                    require_once 'app/code/Patch/Converter.php';
-                    $converter = new Patch_Converter();
+                    $converter = new Converter();
                     $converter->preparePatch($patchPath);
                 } else {
                     $error[$fileId][] = 'Unable to move uploaded file from tmp folder.';

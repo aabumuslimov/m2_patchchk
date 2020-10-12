@@ -12,3 +12,5 @@ define('BP', dirname(__DIR__) . DS);
 define('VAR_DIR_NAME', 'var');
 define('UPLOAD_PATH', 'var/uploads/');
 define('STATS_PATH', 'var/stats/');
+
+require_once __DIR__ . '/autoload.php';

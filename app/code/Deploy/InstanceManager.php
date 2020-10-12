@@ -1,8 +1,13 @@
 <?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+declare(strict_types=1);
 
-require_once 'app/code/Deploy/Instance.php';
+namespace Magento\PatchChecker\Deploy;
 
-class Deploy_InstanceManager
+class InstanceManager
 {
     private $instanceList = [];
 
@@ -24,7 +29,7 @@ class Deploy_InstanceManager
             foreach ($groupInstanceList as $instanceName => $instancePath) {
                 $this->instanceList[$groupName][] = is_int($instancePath)
                     ? $instancePath
-                    : new Deploy_Instance($instanceName, $instancePath);
+                    : new Instance($instanceName, $instancePath);
             }
         }
 
