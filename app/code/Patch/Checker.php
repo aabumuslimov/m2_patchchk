@@ -9,7 +9,6 @@ namespace Magento\PatchChecker\Patch;
 
 use Magento\PatchChecker\Deploy\Instance;
 use Magento\PatchChecker\Deploy\InstanceManager;
-use Magento\PatchChecker\Patch\Check\Strategy\StrategyInterface;
 use Magento\PatchChecker\Patch\Check\StrategyManager;
 
 /**
@@ -21,6 +20,10 @@ class Checker extends AbstractChecker
      * @var InstancePatchConverter
      */
     private $patchConverter;
+    /**
+     * @var StrategyManager
+     */
+    private $strategyManager;
 
     /**
      * @param InstanceManager $instanceManager
@@ -32,20 +35,31 @@ class Checker extends AbstractChecker
         StrategyManager $strategyManager,
         InstancePatchConverter $patchConverter
     ) {
-        parent::__construct($instanceManager, $strategyManager);
+        parent::__construct($instanceManager);
         $this->patchConverter = $patchConverter;
+        $this->strategyManager = $strategyManager;
     }
 
     /**
      * @inheritDoc
      */
-    public function getResult(string $patch, Instance $instance, StrategyInterface $strategy): int
+    public function getResult(Instance $instance, string $patch)
     {
         $patchForInstancePath = $this->patchConverter->convert($patch, $instance->getInstanceType());
-        $patchPath = $strategy->getIsPreserveOriginalFileFormat()
-            ? $patch
-            : $patchForInstancePath;
+        $checkResult = [];
+        foreach ($this->strategyManager->getStrategyList() as $strategy) {
+            $patchPath = ($strategy->getIsPreserveOriginalFileFormat())
+                ? $patch
+                : $patchForInstancePath;
+            $strategyResult = $strategy->check($patchPath, $instance->getInstancePath());
 
-        return $strategy->check($patchPath, $instance->getInstancePath());
+            if ($strategyResult === self::PATCH_APPLY_RESULT_MERGED) {
+                $checkResult = 'merged';
+                break;
+            }
+            $checkResult[$strategy->getStrategyName()] = $strategyResult;
+        }
+
+        return $checkResult;
     }
 }

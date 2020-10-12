@@ -9,8 +9,6 @@ namespace Magento\PatchChecker\Patch;
 
 use Magento\PatchChecker\Deploy\Instance;
 use Magento\PatchChecker\Deploy\InstanceManager;
-use Magento\PatchChecker\Patch\Check\Strategy\StrategyInterface;
-use Magento\PatchChecker\Patch\Check\StrategyManager;
 
 /**
  * Abstract patch checker
@@ -25,21 +23,14 @@ abstract class AbstractChecker
      * @var InstanceManager
      */
     private $instanceManager;
-    /**
-     * @var StrategyManager
-     */
-    private $strategyManager;
 
     /**
      * @param InstanceManager $instanceManager
-     * @param StrategyManager $strategyManager
      */
     public function __construct(
-        InstanceManager $instanceManager,
-        StrategyManager $strategyManager
+        InstanceManager $instanceManager
     ) {
         $this->instanceManager = $instanceManager;
-        $this->strategyManager = $strategyManager;
     }
 
     /**
@@ -55,25 +46,14 @@ abstract class AbstractChecker
             foreach ($groupInstanceList as $instance) {
                 if (is_int($instance)) {
                     for ($i = 0; $i < $instance; $i++) {
-                        $result[$groupName][] = ['instance_name' => 'n/a', 'check_strategy' => 'n/a'];
+                        $result[$groupName][] = ['instance_name' => 'n/a', 'result' => 'n/a'];
                     }
-                } else if ($instance->getInstanceType() == Instance::INSTANCE_TYPE_INVALID) {
-                    $result[$groupName][] = ['instance_name' => $instance->getInstanceName(), 'check_strategy' => 'n/a'];
+                } elseif ($instance->getInstanceType() == Instance::INSTANCE_TYPE_INVALID) {
+                    $result[$groupName][] = ['instance_name' => $instance->getInstanceName(), 'result' => 'n/a'];
                 } else {
-                    $checkResult = [];
-                    foreach ($this->strategyManager->getStrategyList() as $strategy) {
-                        $strategyResult = $this->getResult($patch, $instance, $strategy);
-
-                        if ($strategyResult == self::PATCH_APPLY_RESULT_MERGED) {
-                            $checkResult = 'merged';
-                            break;
-                        }
-
-                        $checkResult[$strategy->getStrategyName()] = $strategyResult;
-                    }
                     $result[$groupName][] = [
                         'instance_name'  => $instance->getInstanceName(),
-                        'check_strategy' => $checkResult
+                        'result' => $this->getResult($instance, $patch)
                     ];
                 }
             }
@@ -85,10 +65,9 @@ abstract class AbstractChecker
     /**
      * Get status of the patch
      *
-     * @param string $patch
      * @param Instance $instance
-     * @param StrategyInterface $strategy
-     * @return int
+     * @param string $patch
+     * @return array|string
      */
-    abstract public function getResult(string $patch, Instance $instance, StrategyInterface $strategy): int;
+    abstract public function getResult(Instance $instance, string $patch);
 }

@@ -97,6 +97,9 @@ td.td_merged {
 table.release_table td {
     width: 60px;
 }
+table.release_table td.colspan_2 {
+    width: 131px;
+}
 table.result_table tr td {
     padding: 2px 10px;
 }

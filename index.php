@@ -17,7 +17,7 @@ try {
         $checkResults = $patchChecker->check(BP . UPLOAD_PATH . $result['new_file_name'][0]);
         $result = $result['result'];
         $result['check_results'] = $checkResults;
-
+        $result['check_method'] = 'file';
         // checked patches statistic collection
         if (isset($result['filename'])) {
             $statsPath = BP . STATS_PATH;
@@ -34,16 +34,17 @@ try {
     } elseif (!empty($_POST['patch_id'])) {
         $result = [
             'check_results' => [],
+            'check_method' => 'mqp',
             'error' => '',
         ];
         try {
             $patchChecker = new \Magento\PatchChecker\Patch\MQP\Checker(
                 new \Magento\PatchChecker\Deploy\InstanceManager(),
-                new \Magento\PatchChecker\Patch\Check\StrategyManager(),
                 new \Magento\PatchChecker\Patch\MQP\PatchRepository(new \Magento\QualityPatches\Info()),
                 new \Magento\PatchChecker\Patch\MQP\VersionsManager
             );
             $result['check_results'] = $patchChecker->check($_POST['patch_id']);
+            $result['check_method'] = 'mqp';
         } catch (\Exception $exception) {
             $result['error'] = "Invalid Patch ID";
         }
