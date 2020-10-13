@@ -94,12 +94,6 @@ td.td_merged {
     background-color: #C899D7;
 }
 
-table.release_table td {
-    width: 60px;
-}
-table.release_table td.colspan_2 {
-    width: 131px;
-}
 table.result_table tr td {
     padding: 2px 10px;
 }
