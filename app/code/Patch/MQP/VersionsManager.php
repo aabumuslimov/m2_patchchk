@@ -54,6 +54,6 @@ class VersionsManager
      */
     private function getConfigurationPath(): string
     {
-        return Util::getAbsolutePath('app/config/magento_package_versions.json');
+        return Util::getAbsolutePath('vendor/magento/quality-patches/magento_releases.json');
     }
 }
