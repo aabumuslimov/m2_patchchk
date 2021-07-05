@@ -38,11 +38,9 @@ class AggregatedPatch
     {
         if ($this->patches === null) {
             $this->patches = [];
-            foreach ($this->config as $packageName => $packageConfiguration) {
-                foreach ($packageConfiguration as $patchTitle => $patchInfo) {
-                    foreach ($patchInfo as $packageConstraint => $patchData) {
-                        $this->patches[] = new Patch($packageName, $packageConstraint, $patchData['file']);
-                    }
+            foreach ($this->config['packages'] as $packageName => $packageConfiguration) {
+                foreach ($packageConfiguration as $packageConstraint => $patchData) {
+                    $this->patches[] = new Patch($packageName, $packageConstraint, $patchData['file']);
                 }
             }
         }
