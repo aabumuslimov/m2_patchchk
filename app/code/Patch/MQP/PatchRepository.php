@@ -55,7 +55,7 @@ class PatchRepository
     private function getConfiguration(): array
     {
         $result = [];
-        $configPath = $this->info->getPatchesConfig();
+        $configPath = $this->info->getSupportPatchesConfig();
         if (file_exists($configPath)) {
             $result = Util::getJsonFile($configPath);
         }
