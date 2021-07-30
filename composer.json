@@ -40,7 +40,7 @@
   "require": {
     "components/jquery": "3.2",
     "isitnikov/m2-convert-patch-for-composer-install": "1.2.2",
-    "magento/quality-patches": "^1.0"
+    "magento/quality-patches": "^1.1"
   },
 
   "scripts": {
