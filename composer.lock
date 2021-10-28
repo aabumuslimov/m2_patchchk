@@ -813,12 +813,12 @@
         },
         {
             "name": "magento/quality-patches",
-            "version": "1.1.3",
+            "version": "1.1.5",
             "dist": {
                 "type": "zip",
-                "url": "https://repo.magento.com/archives/magento/quality-patches/magento-quality-patches-1.1.3.0.zip",
+                "url": "https://repo.magento.com/archives/magento/quality-patches/magento-quality-patches-1.1.5.0.zip",
                 "reference": null,
-                "shasum": "f501384e1aadf895fd25bd57baafc5fbfaa65ad0"
+                "shasum": "fdeff304550a183778a5cc9b39926606806aeea7"
             },
             "require": {
                 "ext-json": "*",
