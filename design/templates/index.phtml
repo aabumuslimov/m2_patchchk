@@ -23,11 +23,11 @@
         </div>
         <div id="separator">-OR-</div>
         <div id="mqp_form_container">
-            <span>Enter MQP Patch ID</span>
+            <span>Enter QPT Patch ID</span>
             <form id="mqp_form" action="index.php">
                 <input id="mqp_input_patch_id" name="patch_id" type="text" value="<?php echo $_GET['patch_id'] ?? '' ?>" placeholder="MDVA-3333">
                 <button type="submit">Check</button>
-                <span id="mqp_version">MQP version <?php echo $mqpVersion ?></span>
+                <span id="mqp_version">QPT version <?php echo $mqpVersion ?></span>
                 <span id="mqp_error_patch_id"></span>
             </form>
         </div>
