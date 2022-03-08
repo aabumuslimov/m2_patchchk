@@ -530,9 +530,7 @@
             "version": "1.2.2",
             "dist": {
                 "type": "file",
-                "url": "https://raw.githubusercontent.com/isitnikov/m2-convert-patch-for-composer-install/master/convert-for-composer.php",
-                "reference": null,
-                "shasum": null
+                "url": "https://raw.githubusercontent.com/isitnikov/m2-convert-patch-for-composer-install/master/convert-for-composer.php"
             },
             "type": "library"
         },
@@ -771,7 +769,6 @@
             "dist": {
                 "type": "zip",
                 "url": "https://repo.magento.com/archives/magento/magento-cloud-patches/magento-magento-cloud-patches-1.0.11.0.zip",
-                "reference": null,
                 "shasum": "41415644f10682a08556a3926594c372359c6228"
             },
             "require": {
@@ -813,24 +810,27 @@
         },
         {
             "name": "magento/quality-patches",
-            "version": "1.1.10",
+            "version": "1.1.11",
             "dist": {
                 "type": "zip",
-                "url": "https://repo.magento.com/archives/magento/quality-patches/magento-quality-patches-1.1.10.0.zip",
-                "reference": null,
-                "shasum": "125169edd168dcf818125d68e7c58c15f5403651"
+                "url": "https://repo.magento.com/archives/magento/quality-patches/magento-quality-patches-1.1.11.0.zip",
+                "shasum": "0e36b874df3531f902be0a2140f05e30125ed055"
             },
             "require": {
                 "ext-json": "*",
                 "magento/magento-cloud-patches": "^1.0.11",
-                "php": "^7.0"
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "codeception/codeception": "^2.5.3",
+                "codeception/codeception": "^4.1",
+                "codeception/module-asserts": "^1.2",
+                "codeception/module-db": "^1.0",
+                "codeception/module-phpbrowser": "^1.0",
+                "codeception/module-rest": "^1.2",
                 "composer/semver": "@stable",
                 "consolidation/robo": "^1.2",
                 "phpmd/phpmd": "@stable",
-                "phpunit/phpunit": "^6.2",
+                "phpunit/phpunit": "^8.5 || ^9.5",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "magento2-component",
@@ -2240,5 +2240,6 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
 }
