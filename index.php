@@ -52,6 +52,22 @@ try {
 
         echo json_encode($result);
         die;
+    } elseif (!empty($argv[1])) {
+        $result = [
+            'check_results' => [],
+            'error' => '',
+            'new_file_name'=> $argv[1]
+        ];
+        $patchChecker = new \Magento\PatchChecker\Patch\Checker(
+            new \Magento\PatchChecker\Deploy\InstanceManager(),
+            new \Magento\PatchChecker\Patch\Check\StrategyManager(),
+            new \Magento\PatchChecker\Patch\InstancePatchConverter(new \Magento\PatchChecker\Patch\Converter())
+        );
+        $checkResults = $patchChecker->check($result['new_file_name']);
+        $result['check_results'] = $checkResults;
+
+        echo json_encode($result);
+        die;
     }
 } catch (Exception $e) {
     // @TODO Implement logging
